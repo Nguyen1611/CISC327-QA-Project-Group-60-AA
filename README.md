@@ -15,12 +15,12 @@ Before you begin, make sure you have the following installed:
 3. npm install
 4. npm run dev
 
-Available Scripts
+Available Scripts  
 In the frontend directory, the following scripts are available:
 
-npm run dev: Starts the development server with hot-reloading at http://localhost:3000.
-npm run build: Builds the app for production and outputs the files in the dist/ folder.
-npm run preview: Serves the production build locally.
+npm run dev: Starts the development server with hot-reloading at http://localhost:3000.  
+npm run build: Builds the app for production and outputs the files in the dist/ folder.  
+npm run preview: Serves the production build locally.  
 npm run lint: Lints your code for consistent formatting using ESLint.
 
 ### Remember to make a new branch to do your work
