@@ -22,3 +22,5 @@ npm run dev: Starts the development server with hot-reloading at http://localhos
 npm run build: Builds the app for production and outputs the files in the dist/ folder.
 npm run preview: Serves the production build locally.
 npm run lint: Lints your code for consistent formatting using ESLint.
+
+### Remember to make a new branch to do your work
