@@ -1,19 +1,17 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import FlightBooking from './pages/FlightBooking';
 import NotFound from './pages/NotFound';
 
-
 function App() {
-
   return (
     <Router>
-      <Switch>
-        <Route path="/landing"><FlightBooking /></Route>
-        <Route component={NotFound} /> {/* Catch-all route for 404 */}
-      </Switch>
+      <Routes>
+        <Route path="/landing" element={<FlightBooking />} />
+        <Route path="*" element={<NotFound />} /> {/* Catch-all route for 404 */}
+      </Routes>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
