@@ -1,0 +1,212 @@
+/* General Booking Payment Styles */
+.booking-payment {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Flight Information Frame */
+  .fancy-flight-info {
+    background: linear-gradient(135deg, #f0f4f8, #d9e4ec);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  .fancy-flight-info h3 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #2b7a78;
+  }
+  
+  .flight-details {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .flight-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .flight-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+  
+  .flight-route {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .flight-time {
+    margin-top: 15px;
+    font-size: 1.1rem;
+  }
+  
+  .flight-time p {
+    margin: 5px 0;
+  }
+  
+  .flight-status {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .status-badge {
+    background-color: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  /* Contact Info Section */
+  .contact-info {
+    margin-bottom: 30px;
+  }
+  
+  .contact-info h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 15px;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .form-field {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-field label {
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+  
+  .form-field input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  /* Price Summary Section */
+  .price-summary {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+  }
+  
+  .price-summary h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  
+  .summary-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    margin: 5px 0;
+  }
+  
+  .summary-line.total {
+    font-weight: 600;
+  }
+  
+  /* Payment Section */
+  .payment-section {
+    margin-bottom: 30px;
+  }
+  
+  .payment-section h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  
+  .credit-card-display {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .credit-card {
+    width: 300px;
+    height: 180px;
+    background-color: #2b7a78;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+  }
+  
+  .card-number {
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+  }
+  
+  .card-info {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .card-name, .card-expiry {
+    font-size: 1rem;
+  }
+  
+  .error-message {
+    color: red;
+    font-weight: 500;
+    margin-bottom: 15px;
+  }
+  
+  .payment-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .payment-btn {
+    background-color: #2b7a78;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .payment-btn:hover {
+    background-color: #204d4d;
+  }
+  
