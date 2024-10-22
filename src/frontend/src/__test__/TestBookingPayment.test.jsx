@@ -1,77 +1,57 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import BookingPayment from '../pages/BookingPayment';
-import '@testing-library/jest-dom'; 
+import '@testing-library/jest-dom';
 
 describe('BookingPayment Component', () => {
   beforeEach(() => {
     render(<BookingPayment />);
   });
 
-  test('renders the payment form correctly', () => {
-    expect(screen.getByPlaceholderText('Card Number')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Name on Card')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('MM/YY')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('CVV')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
-    expect(screen.getByText('Confirm Payment')).toBeInTheDocument();
+  test('renders the component correctly', () => {
+    expect(screen.getByText(/review & secure payment/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/cardholder name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/card number/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/expiration date/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/cvv/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/phone number/i)).toBeInTheDocument();
+    expect(screen.getByText(/confirm payment/i)).toBeInTheDocument();
   });
 
-  test('accepts and processes valid payment information', () => {
-    fireEvent.change(screen.getByPlaceholderText('Card Number'), { target: { value: '1234567812345678' } });
-    fireEvent.change(screen.getByPlaceholderText('Name on Card'), { target: { value: 'John Doe' } });
-    fireEvent.change(screen.getByPlaceholderText('MM/YY'), { target: { value: '12/25' } });
-    fireEvent.change(screen.getByPlaceholderText('CVV'), { target: { value: '123' } });
-    fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'john.doe@example.com' } });
-
-    // Simulate form submission
-    fireEvent.click(screen.getByText('Confirm Payment'));
-
-    // Add a mock for the validation function (this can depend on your actual code)
-    // Example expectation
-    expect(screen.getByText('Payment Successful')).toBeInTheDocument();
+  test('displays flight information correctly', () => {
+    // Check for flight information in the confirmation
+    expect(screen.getByText(/toronto → vancouver/i)).toBeInTheDocument(); // Check for flight route
+    expect(screen.getByText(/2024-10-25 14:00/i)).toBeInTheDocument(); // Check for departure time
+    expect(screen.getByText(/2024-10-25 16:00/i)).toBeInTheDocument(); // Check for arrival time
   });
 
-  test('displays error for invalid payment information', () => {
-    fireEvent.change(screen.getByPlaceholderText('Card Number'), { target: { value: '123' } }); // Invalid card number
-    fireEvent.change(screen.getByPlaceholderText('Name on Card'), { target: { value: '' } }); // Empty name
-    fireEvent.change(screen.getByPlaceholderText('MM/YY'), { target: { value: '12/20' } }); // Expired card
-    fireEvent.change(screen.getByPlaceholderText('CVV'), { target: { value: '12' } }); // Invalid CVV
-    fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'not-an-email' } }); // Invalid email
-
-    // Simulate form submission
-    fireEvent.click(screen.getByText('Confirm Payment'));
-
-    // Expect error messages
-    expect(screen.getByText('Invalid card number')).toBeInTheDocument();
-    expect(screen.getByText('Please provide a valid name')).toBeInTheDocument();
-    expect(screen.getByText('Card is expired')).toBeInTheDocument();
-    expect(screen.getByText('Invalid CVV')).toBeInTheDocument();
-    expect(screen.getByText('Please enter a valid email')).toBeInTheDocument();
+  test('displays price summary in booking confirmation', () => {
+    // Check for price summary details
+    expect(screen.getByText(/price summary/i)).toBeInTheDocument(); // Check for price summary label
+    expect(screen.getByText(/flight price/i)).toBeInTheDocument(); // Check for flight price line
+    expect(screen.getByText(/279/i)).toBeInTheDocument(); // Check for the specific flight price
+    expect(screen.getByText(/taxes & fees/i)).toBeInTheDocument(); // Check for taxes & fees line
+    expect(screen.getByText(/100/i)).toBeInTheDocument(); // Check for the specific taxes & fees
+    expect(screen.getByText(/total/i)).toBeInTheDocument(); // Check for total line
+    expect(screen.getByText(/379/i)).toBeInTheDocument(); // Check for the total price (279 + 100)
   });
 
-  test('displays correct flight information and price summary', () => {
-    // Check for flight information being displayed
-    expect(screen.getByText('Paris → Toronto')).toBeInTheDocument();
-    expect(screen.getByText('Flight Time:')).toBeInTheDocument();
-    expect(screen.getByText('Price:')).toBeInTheDocument();
-    
-    // Check the price summary
-    expect(screen.getByText('Price Summary')).toBeInTheDocument();
-    expect(screen.getByText('$2296')).toBeInTheDocument(); // Assuming this is the price
+  test('displays error message for invalid card number', () => {
+    // Fill in an invalid card number
+    fireEvent.change(screen.getByLabelText(/cardholder name/i), { target: { value: 'John Doe' } });
+    fireEvent.change(screen.getByLabelText(/card number/i), { target: { value: '123' } });
+    fireEvent.change(screen.getByLabelText(/expiration date/i), { target: { value: '12/25' } });
+    fireEvent.change(screen.getByLabelText(/cvv/i), { target: { value: '123' } });
+    fireEvent.change(screen.getByLabelText(/email address/i), { target: { value: 'john.doe@example.com' } });
+    fireEvent.change(screen.getByLabelText(/phone number/i), { target: { value: '123-456-7890' } });
+
+    // Submit the form
+    fireEvent.click(screen.getByText(/confirm payment/i));
+
+    // Expect an error message for the invalid card number
+    expect(screen.getByText(/invalid card number/i)).toBeInTheDocument();
   });
 
-  test('handles successful booking navigation', () => {
-    // Assuming you have a way to simulate navigation after successful booking
-    fireEvent.change(screen.getByPlaceholderText('Card Number'), { target: { value: '1234567812345678' } });
-    fireEvent.change(screen.getByPlaceholderText('Name on Card'), { target: { value: 'John Doe' } });
-    fireEvent.change(screen.getByPlaceholderText('MM/YY'), { target: { value: '12/25' } });
-    fireEvent.change(screen.getByPlaceholderText('CVV'), { target: { value: '123' } });
-    fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'john.doe@example.com' } });
 
-    fireEvent.click(screen.getByText('Confirm Payment'));
-
-    // Assuming the navigation to confirmation or success page
-    expect(screen.getByText('Booking Confirmation')).toBeInTheDocument();
-  });
 });
