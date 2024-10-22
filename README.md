@@ -40,7 +40,7 @@ On Window: venv\Scripts\activate
 pip install -r requirements.txt
 
 ## Step 3: Set Up the Flask Application
-## Set the Flask application environment variable to point to the main Flask file (app.py):
+Set the Flask application environment variable to point to the main Flask file (app.py):
 export FLASK_APP=app.py
 
 ## Run the Flask Server
