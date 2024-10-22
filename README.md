@@ -28,11 +28,11 @@ To set up and run the Flask backend, follow these steps:
 
 ## Step 1: Set Up a Virtual Environment
 
-# Navigate to the backend directory
+## Navigate to the backend directory
 cd ../backend
-# Create a virtual environment:
+## Create a virtual environment:
 python3 -m venv venv
-# Activate the virtual environment
+## Activate the virtual environment
 On Linux or macOS: source venv/bin/activate
 On Window: venv\Scripts\activate
 
@@ -40,7 +40,7 @@ On Window: venv\Scripts\activate
 pip install -r requirements.txt
 
 ## Step 3: Set Up the Flask Application
-# Set the Flask application environment variable to point to the main Flask file (app.py):
+## Set the Flask application environment variable to point to the main Flask file (app.py):
 export FLASK_APP=app.py
 
 ## Run the Flask Server
