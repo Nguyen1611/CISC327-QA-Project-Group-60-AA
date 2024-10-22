@@ -4,6 +4,8 @@ import { AuthContext } from "../context/AuthContext";
 import "../styles/Navbar.css";
 
 export default function Navbar() {
+  const { isAuthenticated, user, logout } = useContext(AuthContext);
+
   return (
     <header className="navbar-header">
       <div className="navbar-content">
@@ -21,18 +23,19 @@ export default function Navbar() {
           </li>
         </ul>
 
-        {/* Sign In and Register buttons */}
+        {/* Auth Buttons */}
         <div className="auth-buttons">
-          <button className="btn-signin">
-            <NavLink to="/signin" className={({ isActive }) => (isActive ? "active" : "")}>
-                Sign In
-            </NavLink>
-          </button>
-          <button className="btn-register">
-            <NavLink to="/register" className={({ isActive }) => (isActive ? "active" : "")}>
-              Register
-            </NavLink>
-          </button>
+          {isAuthenticated ? (
+            <>
+              <span className="welcome-message">Welcome, {user?.email}!</span>
+              <button className="btn-logout" onClick={logout}>Logout</button>
+            </>
+          ) : (
+            <>
+              <NavLink to="/signin" className="btn-signin">Sign In</NavLink>
+              <NavLink to="/register" className="btn-register">Register</NavLink>
+            </>
+          )}
         </div>
       </div>
     </header>

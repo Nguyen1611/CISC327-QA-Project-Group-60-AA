@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 import "../styles/Auth.css";
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSignIn = async () => {
     try {
@@ -15,11 +19,13 @@ const SignIn = () => {
         },
         body: JSON.stringify({ email, password }),
       });
-      
+
       const data = await response.json();
 
       if (data.status === "success") {
+        login({ email });
         setMessage("Login successful!");
+        navigate("/");
       } else {
         setMessage("Invalid credentials.");
       }

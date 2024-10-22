@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import "../styles/Auth.css";
 
 const Register = () => {
@@ -10,6 +11,7 @@ const Register = () => {
     confirmPassword: ''
   });
   const [message, setMessage] = useState('');
+  const { login } = useContext(AuthContext);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,15 +30,13 @@ const Register = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
-          email: formData.email, 
-          password: formData.password 
-        }),
+        body: JSON.stringify({ email: formData.email, password: formData.password }),
       });
 
       const data = await response.json();
 
       if (data.status === "success") {
+        login({ email: formData.email });
         setMessage("Registration successful!");
       } else {
         setMessage(data.message);
@@ -50,20 +50,6 @@ const Register = () => {
     <div className="auth-container">
       <div className="auth-form">
         <h2>Sign Up</h2>
-        <input 
-          type="text" 
-          name="firstName" 
-          placeholder="First Name" 
-          value={formData.firstName} 
-          onChange={handleChange} 
-        />
-        <input 
-          type="text" 
-          name="lastName" 
-          placeholder="Last Name" 
-          value={formData.lastName} 
-          onChange={handleChange} 
-        />
         <input 
           type="email" 
           name="email" 
