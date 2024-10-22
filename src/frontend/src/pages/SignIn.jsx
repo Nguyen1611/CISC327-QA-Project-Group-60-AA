@@ -3,15 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import "../styles/Auth.css";
 
+// SignIn component for user login
 const SignIn = () => {
+
+  // State for email and password
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  // Handle user login
   const handleSignIn = async () => {
     try {
+      // Make POST request to login user
       const response = await fetch("http://127.0.0.1:5000/login", {
         method: "POST",
         headers: {
@@ -22,6 +27,7 @@ const SignIn = () => {
 
       const data = await response.json();
 
+      // Handle login response
       if (data.status === "success") {
         login({ email });
         setMessage("Login successful!");
@@ -34,6 +40,7 @@ const SignIn = () => {
     }
   };
 
+  // Render login form
   return (
     <div className="auth-container">
       <div className="auth-form">

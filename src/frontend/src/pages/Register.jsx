@@ -2,7 +2,10 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import "../styles/Auth.css";
 
+// Register component for user registration
 const Register = () => {
+
+  // State for form data
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -10,14 +13,18 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
+
+  // State for message display
   const [message, setMessage] = useState('');
   const { login } = useContext(AuthContext);
 
+  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // Handle user registration
   const handleRegister = async () => {
     if (formData.password !== formData.confirmPassword) {
       setMessage("Passwords do not match.");
@@ -25,6 +32,7 @@ const Register = () => {
     }
 
     try {
+      // Make POST request to register user
       const response = await fetch("http://127.0.0.1:5000/register", {
         method: "POST",
         headers: {
@@ -35,6 +43,7 @@ const Register = () => {
 
       const data = await response.json();
 
+      // Handle registration response
       if (data.status === "success") {
         login({ email: formData.email });
         setMessage("Registration successful!");
@@ -46,6 +55,7 @@ const Register = () => {
     }
   };
 
+  // Render registration form
   return (
     <div className="auth-container">
       <div className="auth-form">
