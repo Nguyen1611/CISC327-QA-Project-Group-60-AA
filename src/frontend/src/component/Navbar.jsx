@@ -1,5 +1,7 @@
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import "./Navbar.css";
+import { AuthContext } from "../context/AuthContext";
+import "../styles/Navbar.css";
 
 export default function Navbar() {
   return (
@@ -8,12 +10,12 @@ export default function Navbar() {
         {/* Navigation Links */}
         <ul className="navbar-links">
           <li>
-            <NavLink to="/flights" className={({ isActive }) => (isActive ? "active" : "")}>
+            <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>
               Flights
             </NavLink>
           </li>
           <li>
-            <NavLink to="/my-booking" className={({ isActive }) => (isActive ? "active" : "")}>
+            <NavLink to="/booking" className={({ isActive }) => (isActive ? "active" : "")}>
               My Booking
             </NavLink>
           </li>

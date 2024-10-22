@@ -1,61 +1,67 @@
 .flight-booking {
-  font-family: Arial, sans-serif;
-  width: 100%;
-  padding: 20px;
-}
-
-.trip-selection {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.search-section {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.search-fields {
-  display: flex;
-  gap: 10px;
-}
-
-.flight-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-.flight-card {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.flight-card img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-}
-
-.flight-info {
-  padding: 10px;
-}
-
-.flight-card.large {
-  grid-column: span 2;
-}
-
-.footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.language-selector select {
-  padding: 5px;
-}
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .trip-selection {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .trip-selection label {
+    margin: 0 10px;
+  }
+  
+  .search-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-fields {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .flight-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .flight-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .flight-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+  
+  .flight-info {
+    padding: 10px;
+  }
+  
+  .flight-card.large {
+    grid-column: span 2;
+  }
+  
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .language-selector select {
+    padding: 5px;
+  }
+  
