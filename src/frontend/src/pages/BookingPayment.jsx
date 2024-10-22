@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import '../styles/BookingPayment.css';
 
 const BookingPayment = () => {
@@ -10,10 +9,9 @@ const BookingPayment = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
 
-  const navigate = useNavigate();
-
-  // Mock flight details (for now)
   const flightDetails = {
     route: 'Toronto → Vancouver',
     departureTime: '2024-10-25 14:00',
@@ -48,52 +46,68 @@ const BookingPayment = () => {
     const errorMsg = validatePaymentInfo();
     if (errorMsg) {
       setError(errorMsg);
+      setSuccess(false);
     } else {
       setError('');
-      navigate('/payment-success');
+      setSuccess(true);
+      setConfirmed(true); // Simulate successful confirmation
     }
   };
+
+  if (confirmed) {
+    return (
+      <div className="booking-confirmation">
+        <h2>Booking Confirmation</h2>
+        <p>Your payment was successful!</p>
+        <p>Flight Route: {flightDetails.route}</p>
+        <p>Departure Time: {flightDetails.departureTime}</p>
+        <p>Arrival Time: {flightDetails.arrivalTime}</p>
+        <p>Total Price: ${flightDetails.price + 100}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="booking-payment">
       <h2 className="title">Review & Secure Payment</h2>
 
       {/* Flight Route Information */}
-<div className="flight-info-frame-info">
-  <h3>Flight Information</h3>
-  <div className="flight-details">
-    <div className="flight-header">
-      <img src="/icons/plane-icon.png" alt="" className="flight-icon" />
-      <p className="flight-route">{flightDetails.route}</p>
-    </div>
-    <div className="flight-time">
-      <p><strong>Departure:</strong> {flightDetails.departureTime}</p>
-      <p><strong>Arrival:</strong> {flightDetails.arrivalTime}</p>
-    </div>
-    <div className="flight-status">
-      <p><span className="status-badge">Confirmed</span></p>
-    </div>
-  </div>
-</div>
-
+      <div className="fancy-flight-info">
+        <h3>Flight Information</h3>
+        <div className="flight-details">
+          <div className="flight-header">
+            <img src="/icons/plane-icon.png" alt="" className="flight-icon" />
+            <p className="flight-route">{flightDetails.route}</p>
+          </div>
+          <div className="flight-time">
+            <p><strong>Departure:</strong> {flightDetails.departureTime}</p>
+            <p><strong>Arrival:</strong> {flightDetails.arrivalTime}</p>
+          </div>
+          <div className="flight-status">
+            <p><span className="status-badge">Confirmed</span></p>
+          </div>
+        </div>
+      </div>
 
       {/* Contact Information */}
       <div className="contact-info">
         <h3>Contact Information</h3>
         <div className="form-grid">
           <div className="form-field">
-            <label>Email Address <span className="required">*</span></label>
+            <label htmlFor="email">Email Address <span className="required">*</span></label>
             <input
+              id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="your-email@example.com"
+              placeholder="Enter your email"
             />
           </div>
           <div className="form-field">
-            <label>Phone Number <span className="required">*</span></label>
+            <label htmlFor="phone">Phone Number <span className="required">*</span></label>
             <input
+              id="phone"
               type="text"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -136,23 +150,26 @@ const BookingPayment = () => {
           </div>
         </div>
 
-        {error && <p className="error-message">{error}</p>}
+        {error && <p className="error-message" role="alert">{error}</p>}
+        {success && <p className="success-message">Payment Successful!</p>}
 
         <form onSubmit={handlePayment} className="payment-form">
           <div className="form-grid">
             <div className="form-field">
-              <label>Cardholder Name <span className="required">*</span></label>
+              <label htmlFor="cardholderName">Cardholder Name <span className="required">*</span></label>
               <input
+                id="cardholderName"
                 type="text"
                 value={cardholderName}
                 onChange={(e) => setCardholderName(e.target.value)}
                 required
-                placeholder="Gia Nguyen dep trai vai l"
+                placeholder="Enter Cardholder Name"
               />
             </div>
             <div className="form-field">
-              <label>Card Number <span className="required">*</span></label>
+              <label htmlFor="cardNumber">Card Number <span className="required">*</span></label>
               <input
+                id="cardNumber"
                 type="text"
                 value={cardNumber}
                 onChange={(e) => setCardNumber(e.target.value)}
@@ -161,8 +178,9 @@ const BookingPayment = () => {
               />
             </div>
             <div className="form-field small-field">
-              <label>Expiration Date <span className="required">*</span></label>
+              <label htmlFor="expirationDate">Expiration Date <span className="required">*</span></label>
               <input
+                id="expirationDate"
                 type="text"
                 value={expirationDate}
                 onChange={(e) => setExpirationDate(e.target.value)}
@@ -171,17 +189,19 @@ const BookingPayment = () => {
               />
             </div>
             <div className="form-field small-field">
-              <label>CVV <span className="required">*</span></label>
+              <label htmlFor="cvv">CVV <span className="required">*</span></label>
               <input
+                id="cvv"
                 type="text"
                 value={cvv}
                 onChange={(e) => setCvv(e.target.value)}
-                placeholder="•••"
+                placeholder="CVV"
                 required
               />
             </div>
           </div>
-          <button type="submit" className="payment-btn">Confirm Payment</button>
+          <button type="submit" className="payment-btn" data-testid="confirm-payment-btn">Confirm Payment</button>
+
         </form>
       </div>
     </div>
@@ -189,3 +209,5 @@ const BookingPayment = () => {
 };
 
 export default BookingPayment;
+
+        
