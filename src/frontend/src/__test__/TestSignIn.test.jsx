@@ -18,6 +18,7 @@ describe('SignIn Component', () => {
     );
   };
 
+  // renders the component correctly
   test('renders the component correctly', () => {
     renderWithContext(<SignIn />);
     expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
@@ -25,6 +26,7 @@ describe('SignIn Component', () => {
     expect(screen.getAllByText('Sign In').length).toBeGreaterThan(0); // Check if at least one "Sign In" exists
   });
 
+  // handles email and password input
   test('handles email and password input', () => {
     renderWithContext(<SignIn />);
 
@@ -35,6 +37,7 @@ describe('SignIn Component', () => {
     expect(screen.getByPlaceholderText('Password')).toHaveValue('password123');
   });
 
+  // displays success message after successful login
   test('displays success message after successful login', async () => {
     // Mock fetch success response
     global.fetch = vi.fn(() =>
@@ -61,6 +64,7 @@ describe('SignIn Component', () => {
     expect(mockLogin).toHaveBeenCalledWith({ email: 'test@example.com' });
   });
 
+  // displays error message for invalid credentials
   test('displays error message for invalid credentials', async () => {
     // Mock fetch error response
     global.fetch = vi.fn(() =>

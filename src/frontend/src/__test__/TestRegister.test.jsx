@@ -24,13 +24,15 @@ describe('Register Component', () => {
     renderWithContext(<Register />);
   });
 
+  // renders the component correctly
   test('renders the component correctly', () => {
     expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Confirm Password')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /sign up/i })).toBeInTheDocument();
   });
-
+  
+  // handles input changes correctly
   test('handles input changes correctly', () => {
     fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'new@example.com' } });
     fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password123' } });
@@ -41,6 +43,7 @@ describe('Register Component', () => {
     expect(screen.getByPlaceholderText('Confirm Password')).toHaveValue('password123');
   });
 
+  //displays error message for password mismatch
   test('displays error message for password mismatch', async () => {
     fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password123' } });
     fireEvent.change(screen.getByPlaceholderText('Confirm Password'), { target: { value: 'differentpassword' } });
@@ -49,6 +52,7 @@ describe('Register Component', () => {
     expect(screen.getByText('Passwords do not match.')).toBeInTheDocument();
   });
 
+  // displays success message after successful registration
   test('displays success message after successful registration', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
@@ -67,6 +71,7 @@ describe('Register Component', () => {
     });
   });
 
+  // displays error message for server error
   test('displays error message for server error', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({

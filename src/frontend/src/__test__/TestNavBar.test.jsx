@@ -17,6 +17,7 @@ describe('Navbar Component', () => {
     );
   };
 
+  // renders correctly when not authenticated
   test('renders correctly when not authenticated', () => {
     renderWithContext(false, null, vi.fn());
 
@@ -29,6 +30,8 @@ describe('Navbar Component', () => {
     expect(screen.queryByText('Logout')).not.toBeInTheDocument();
   });
 
+
+  //renders correctly when authenticated
   test('renders correctly when authenticated', () => {
     const mockUser = { email: 'test@example.com' };
     renderWithContext(true, mockUser, vi.fn());
@@ -42,6 +45,8 @@ describe('Navbar Component', () => {
     expect(screen.queryByText('Register')).not.toBeInTheDocument();
   });
 
+
+  //calls logout function when Logout button is clicked
   test('calls logout function when Logout button is clicked', () => {
     const mockLogout = vi.fn();
     renderWithContext(true, { email: 'test@example.com' }, mockLogout);
