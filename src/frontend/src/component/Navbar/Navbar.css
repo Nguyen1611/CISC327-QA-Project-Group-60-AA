@@ -1,0 +1,79 @@
+/* Make the navbar span the full width */
+.navbar-header {
+    width: 100%;
+    background-color: white;
+    border-bottom: 1px solid #eaeaea;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  /* Align content within the navbar */
+  .navbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  
+  .language-selector {
+    display: flex;
+    align-items: center;
+  }
+  
+  .language-selector img {
+    height: 20px;
+    margin-right: 5px;
+  }
+  
+  .dropdown-arrow {
+    margin-left: 5px;
+    font-size: 12px;
+  }
+  
+  .navbar-links {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+  }
+  
+  .navbar-links li {
+    list-style: none;
+  }
+  
+  .navbar-links a {
+    text-decoration: none;
+    color: black;
+    padding: 8px 16px;
+  }
+  
+  .navbar-links .active {
+    background-color: #000;
+    color: #fff;
+    border-radius: 4px;
+  }
+  
+  .auth-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .btn-signin, .btn-register {
+    padding: 8px 16px;
+    border: 1px solid #000;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .btn-signin {
+    background-color: white;
+    color: black;
+  }
+  
+  .btn-register {
+    background-color: black;
+    color: white;
+  }
+  
