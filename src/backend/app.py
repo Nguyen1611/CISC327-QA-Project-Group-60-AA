@@ -1,5 +1,16 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import os
+from dotenv import load_dotenv
+from pymongo import MongoClient
+
+
+load_dotenv()
+
+connection_uri = os.getenv('DATABASE_URI')
+
+client = MongoClient(connection_uri)
+
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for cross-origin requests
