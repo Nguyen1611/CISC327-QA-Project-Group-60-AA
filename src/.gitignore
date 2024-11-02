@@ -25,4 +25,4 @@ dist-ssr
 
 #addition
 venv/
-
+.env
