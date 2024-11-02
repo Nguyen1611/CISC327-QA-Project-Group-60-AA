@@ -1,25 +1,20 @@
-from flask import Flask, request, jsonify
+from flask import Flask
 from flask_cors import CORS
+from auth import auth_bp  # Import the Blueprint
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for cross-origin requests
 
-# Mock user database
-users = {
-    "test@example.com": "password123" # sign in to test dynamic navbar
-}
+# Register the auth Blueprint
+app.register_blueprint(auth_bp, url_prefix='/auth')
 
-@app.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
+@app.route('/')
+def home():
+    return "Welcome to the main app"
 
-    # Check if the user exists and password matches
-    if email in users and users[email] == password:
-        return jsonify({"message": "Login successful!", "status": "success"}), 200
-    else:
-        return jsonify({"message": "Invalid credentials", "status": "fail"}), 401
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
+
