@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from auth import auth_bp  # Import the Blueprint
+from payment import is_valid_payment, check_flight_availability, confirm_booking,  get_booking_history
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for cross-origin requests
