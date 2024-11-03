@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import '../styles/BookingPayment.css';
+import PaymentSuccessfully from '../pages/PaymentSuccessfully.jsx';
+import PaymentFailed from '../pages/PaymentFailed.jsx';
 
 const BookingPayment = () => {
   const [cardNumber, setCardNumber] = useState('');
@@ -56,14 +58,18 @@ const BookingPayment = () => {
 
   if (confirmed) {
     return (
-      <div className="booking-confirmation">
-        <h2>Booking Confirmation</h2>
-        <p>Your payment was successful!</p>
-        <p>Flight Route: {flightDetails.route}</p>
-        <p>Departure Time: {flightDetails.departureTime}</p>
-        <p>Arrival Time: {flightDetails.arrivalTime}</p>
-        <p>Total Price: ${flightDetails.price + 100}</p>
-      </div>
+      <PaymentSuccessfully
+        route={flightDetails.route}
+        departureTime={flightDetails.departureTime}
+        arrivalTime={flightDetails.arrivalTime}
+        totalPrice={flightDetails.price + 100} // Add any additional fees if applicable
+      />
+    );
+  } else if (error) {
+    return (
+      <PaymentFailed
+        errorMessage={error} // Pass the error message to the PaymentFailed component
+      />
     );
   }
 
