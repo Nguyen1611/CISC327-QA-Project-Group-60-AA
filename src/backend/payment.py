@@ -161,6 +161,3 @@ def get_booking_history():
     
     return jsonify({"message": "User not found"}), 404
 
-
-if __name__ == "__main__":
-    app.run(debug=True)
