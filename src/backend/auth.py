@@ -8,6 +8,7 @@ from pymongo.errors import ConnectionFailure
 from dotenv import load_dotenv
 import bcrypt
 import os
+# from bson import ObjectId
 
 # Create a Blueprint for authentication routes
 auth_bp = Blueprint('auth', __name__)
@@ -102,5 +103,13 @@ def register():
 #     if users_collection is None:
 #         return jsonify({"message": "Database connection not available.", "status": "error"}), 500
 
-#     users = list(users_collection.find())  # Display all fields including _id and Password
-#     return jsonify(users), 200
+#     try:
+#         # Convert MongoDB documents to a JSON-serializable format
+#         users = list(users_collection.find())
+#         for user in users:
+#             # Convert ObjectId to string
+#             user['_id'] = str(user['_id'])
+
+#         return jsonify(users), 200
+#     except Exception as e:
+#         return jsonify({"message": "Error occurred while fetching users.", "status": "error"}), 500
