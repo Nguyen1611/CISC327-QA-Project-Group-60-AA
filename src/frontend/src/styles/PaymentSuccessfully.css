@@ -1,0 +1,55 @@
+.payment-successfully {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #e6f9f1;
+    border: 2px solid #4caf50;
+    border-radius: 10px;
+    color: #2e7d32;
+    font-family: Arial, sans-serif;
+    margin: 20px 0;
+    box-shadow: 0px 4px 10px rgba(0, 128, 0, 0.1);
+  }
+  
+  .payment-successfully h3 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    color: #2e7d32;
+  }
+  
+  .payment-successfully p {
+    font-size: 1.2em;
+    margin: 5px 0;
+  }
+  
+  .flight-info {
+    margin-top: 10px;
+    padding: 15px;
+    background-color: #f1fcf6;
+    border-radius: 8px;
+    width: 100%;
+    text-align: left;
+    color: #2e7d32;
+  }
+  
+  .flight-info p {
+    margin: 5px 0;
+  }
+  
+  button.back-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button.back-button:hover {
+    background-color: #43a047;
+  }
+  
