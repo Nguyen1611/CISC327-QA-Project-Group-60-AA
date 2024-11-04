@@ -1,13 +1,18 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom'; // Import MemoryRouter
 import BookingPayment from '../pages/BookingPayment';
 import '@testing-library/jest-dom';
 
 describe('BookingPayment Component', () => {
   beforeEach(() => {
-    render(<BookingPayment />);
+    render(
+      <MemoryRouter>
+        <BookingPayment />
+      </MemoryRouter>
+    ); // Wrap BookingPayment in MemoryRouter
   });
-
+  
   test('renders the component correctly', () => {
     expect(screen.getByText(/review & secure payment/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/cardholder name/i)).toBeInTheDocument();
