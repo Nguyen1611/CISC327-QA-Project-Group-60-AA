@@ -4,8 +4,17 @@ import PaymentSuccessfully from '../pages/PaymentSuccessfully.jsx';
 import PaymentFailed from '../pages/PaymentFailed.jsx';
 
 const BookingPayment = () => {
+  const [cardNumber, setCardNumber] = useState('');
+  const [expirationDate, setExpirationDate] = useState('');
+  const [cvv, setCvv] = useState('');
+  const [cardholderName, setCardholderName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
 
-  const defaultFlightDetails = {
+  const flightDetails = {
     _id: '6726f4075edf20eb09d8f39a',
     fromLocation: 'Toronto',
     toLocation: 'Montreal',
@@ -18,19 +27,6 @@ const BookingPayment = () => {
       { seat: '1B', available: false }
     ]
   };
-
-  // Use location state if available, otherwise fallback to default flight details
-  const flightDetails =  defaultFlightDetails;
-
-  const [cardNumber, setCardNumber] = useState('');
-  const [expirationDate, setExpirationDate] = useState('');
-  const [cvv, setCvv] = useState('');
-  const [cardholderName, setCardholderName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
 
   const validatePaymentInfo = () => {
     if (cardNumber.length !== 16 || isNaN(cardNumber)) {
@@ -165,9 +161,70 @@ const BookingPayment = () => {
       {/* Payment Section */}
       <div className="payment-section">
         <h3>Payment Information</h3>
+        <div className="credit-card-display">
+          <div className="credit-card">
+            <div className="card-number">
+              {cardNumber ? cardNumber.replace(/(.{4})/g, '$1 ') : '•••• •••• •••• ••••'}
+            </div>
+            <div className="card-info">
+              <div className="card-name">{cardholderName || 'Cardholder Name'}</div>
+              <div className="card-expiry">{expirationDate || 'MM/YY'}</div>
+            </div>
+          </div>
+        </div>
+
+        {error && <p className="error-message" role="alert">{error}</p>}
+        {success && <p className="success-message">Payment Successful!</p>}
+
         <form onSubmit={handlePayment} className="payment-form">
-          {/* Card fields go here */}
+          <div className="form-grid">
+            <div className="form-field">
+              <label htmlFor="cardholderName">Cardholder Name <span className="required">*</span></label>
+              <input
+                id="cardholderName"
+                type="text"
+                value={cardholderName}
+                onChange={(e) => setCardholderName(e.target.value)}
+                required
+                placeholder="Enter Cardholder Name"
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="cardNumber">Card Number <span className="required">*</span></label>
+              <input
+                id="cardNumber"
+                type="text"
+                value={cardNumber}
+                onChange={(e) => setCardNumber(e.target.value)}
+                required
+                placeholder="•••• •••• •••• ••••"
+              />
+            </div>
+            <div className="form-field small-field">
+              <label htmlFor="expirationDate">Expiration Date <span className="required">*</span></label>
+              <input
+                id="expirationDate"
+                type="text"
+                value={expirationDate}
+                onChange={(e) => setExpirationDate(e.target.value)}
+                placeholder="MM/YY"
+                required
+              />
+            </div>
+            <div className="form-field small-field">
+              <label htmlFor="cvv">CVV <span className="required">*</span></label>
+              <input
+                id="cvv"
+                type="text"
+                value={cvv}
+                onChange={(e) => setCvv(e.target.value)}
+                placeholder="CVV"
+                required
+              />
+            </div>
+          </div>
           <button type="submit" className="payment-btn" data-testid="confirm-payment-btn">Confirm Payment</button>
+
         </form>
       </div>
     </div>
