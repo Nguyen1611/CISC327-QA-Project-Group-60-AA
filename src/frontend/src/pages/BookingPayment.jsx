@@ -4,6 +4,24 @@ import PaymentSuccessfully from '../pages/PaymentSuccessfully.jsx';
 import PaymentFailed from '../pages/PaymentFailed.jsx';
 
 const BookingPayment = () => {
+
+  const defaultFlightDetails = {
+    _id: '6726f4075edf20eb09d8f39a',
+    fromLocation: 'Toronto',
+    toLocation: 'Montreal',
+    price: 79,
+    img: 'toronto-montreal.jpg',
+    tripType: 'One Way',
+    date: '2024-12-01',
+    availableSeats: [
+      { seat: '1A', available: true },
+      { seat: '1B', available: false }
+    ]
+  };
+
+  // Use location state if available, otherwise fallback to default flight details
+  const flightDetails =  defaultFlightDetails;
+
   const [cardNumber, setCardNumber] = useState('');
   const [expirationDate, setExpirationDate] = useState('');
   const [cvv, setCvv] = useState('');
@@ -13,14 +31,6 @@ const BookingPayment = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
-
-  const location = useLocation();
-  const flightDetails = {
-    route: 'Toronto → Vancouver',
-    departureTime: '2024-10-25 14:00',
-    arrivalTime: '2024-10-25 16:00',
-    price: 279,
-  };
 
   const validatePaymentInfo = () => {
     if (cardNumber.length !== 16 || isNaN(cardNumber)) {
@@ -60,9 +70,9 @@ const BookingPayment = () => {
   if (confirmed) {
     return (
       <PaymentSuccessfully
-        route={flightDetails.route}
-        departureTime={flightDetails.departureTime}
-        arrivalTime={flightDetails.arrivalTime}
+        route={`${flightDetails.fromLocation} → ${flightDetails.toLocation}`}
+        departureTime={flightDetails.date}
+        arrivalTime={flightDetails.date} // Adjust based on duration if available
         totalPrice={flightDetails.price + 100} // Add any additional fees if applicable
       />
     );
@@ -83,12 +93,22 @@ const BookingPayment = () => {
         <h3>Flight Information</h3>
         <div className="flight-details">
           <div className="flight-header">
-            <img src="/icons/plane-icon.png" alt="" className="flight-icon" />
-            <p className="flight-route">{flightDetails.route}</p>
+            <img src={`/images/${flightDetails.img}`} alt="Flight" className="flight-icon" />
+            <p className="flight-route">{`${flightDetails.fromLocation} → ${flightDetails.toLocation}`}</p>
           </div>
           <div className="flight-time">
-            <p><strong>Departure:</strong> {flightDetails.departureTime}</p>
-            <p><strong>Arrival:</strong> {flightDetails.arrivalTime}</p>
+            <p><strong>Date:</strong> {flightDetails.date}</p>
+            <p><strong>Trip Type:</strong> {flightDetails.tripType}</p>
+          </div>
+          <div className="available-seats">
+            <p><strong>Available Seats:</strong></p>
+            <ul>
+              {flightDetails.availableSeats.map((seat) => (
+                <li key={seat.seat} className={seat.available ? 'available' : 'unavailable'}>
+                  {seat.seat} {seat.available ? '(Available)' : '(Booked)'}
+                </li>
+              ))}
+            </ul>
           </div>
           <div className="flight-status">
             <p><span className="status-badge">Confirmed</span></p>
@@ -145,70 +165,9 @@ const BookingPayment = () => {
       {/* Payment Section */}
       <div className="payment-section">
         <h3>Payment Information</h3>
-        <div className="credit-card-display">
-          <div className="credit-card">
-            <div className="card-number">
-              {cardNumber ? cardNumber.replace(/(.{4})/g, '$1 ') : '•••• •••• •••• ••••'}
-            </div>
-            <div className="card-info">
-              <div className="card-name">{cardholderName || 'Cardholder Name'}</div>
-              <div className="card-expiry">{expirationDate || 'MM/YY'}</div>
-            </div>
-          </div>
-        </div>
-
-        {error && <p className="error-message" role="alert">{error}</p>}
-        {success && <p className="success-message">Payment Successful!</p>}
-
         <form onSubmit={handlePayment} className="payment-form">
-          <div className="form-grid">
-            <div className="form-field">
-              <label htmlFor="cardholderName">Cardholder Name <span className="required">*</span></label>
-              <input
-                id="cardholderName"
-                type="text"
-                value={cardholderName}
-                onChange={(e) => setCardholderName(e.target.value)}
-                required
-                placeholder="Enter Cardholder Name"
-              />
-            </div>
-            <div className="form-field">
-              <label htmlFor="cardNumber">Card Number <span className="required">*</span></label>
-              <input
-                id="cardNumber"
-                type="text"
-                value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value)}
-                required
-                placeholder="•••• •••• •••• ••••"
-              />
-            </div>
-            <div className="form-field small-field">
-              <label htmlFor="expirationDate">Expiration Date <span className="required">*</span></label>
-              <input
-                id="expirationDate"
-                type="text"
-                value={expirationDate}
-                onChange={(e) => setExpirationDate(e.target.value)}
-                placeholder="MM/YY"
-                required
-              />
-            </div>
-            <div className="form-field small-field">
-              <label htmlFor="cvv">CVV <span className="required">*</span></label>
-              <input
-                id="cvv"
-                type="text"
-                value={cvv}
-                onChange={(e) => setCvv(e.target.value)}
-                placeholder="CVV"
-                required
-              />
-            </div>
-          </div>
+          {/* Card fields go here */}
           <button type="submit" className="payment-btn" data-testid="confirm-payment-btn">Confirm Payment</button>
-
         </form>
       </div>
     </div>
@@ -216,5 +175,6 @@ const BookingPayment = () => {
 };
 
 export default BookingPayment;
+
 
         
