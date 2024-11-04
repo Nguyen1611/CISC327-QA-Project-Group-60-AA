@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import '../styles/BookingPayment.css';
 
 const BookingPayment = () => {
+  const [searchParams] = useSearchParams();
+  const flightId = searchParams.get('id'); // Get the flight ID from the URL
   const [cardNumber, setCardNumber] = useState('');
   const [expirationDate, setExpirationDate] = useState('');
   const [cvv, setCvv] = useState('');
@@ -11,13 +14,25 @@ const BookingPayment = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [flightDetails, setFlightDetails] = useState(null); // State to hold flight details
 
-  const flightDetails = {
-    route: 'Toronto → Vancouver',
-    departureTime: '2024-10-25 14:00',
-    arrivalTime: '2024-10-25 16:00',
-    price: 279,
-  };
+  // Fetch flight details based on flight ID
+  useEffect(() => {
+    const fetchFlightDetails = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/get-flight/${flightId}`); // Update this endpoint as needed
+        if (!response.ok) {
+          throw new Error('Failed to fetch flight details');
+        }
+        const data = await response.json();
+        setFlightDetails(data.flight); // Assuming the response structure includes the flight object
+      } catch (error) {
+        console.error('Error fetching flight details:', error);
+      }
+    };
+
+    fetchFlightDetails();
+  }, [flightId]);
 
   const validatePaymentInfo = () => {
     if (cardNumber.length !== 16 || isNaN(cardNumber)) {
@@ -59,12 +74,20 @@ const BookingPayment = () => {
       <div className="booking-confirmation">
         <h2>Booking Confirmation</h2>
         <p>Your payment was successful!</p>
-        <p>Flight Route: {flightDetails.route}</p>
-        <p>Departure Time: {flightDetails.departureTime}</p>
-        <p>Arrival Time: {flightDetails.arrivalTime}</p>
-        <p>Total Price: ${flightDetails.price + 100}</p>
+        {flightDetails && (
+          <>
+            <p>Flight Route: {flightDetails.route}</p>
+            <p>Departure Time: {flightDetails.departureTime}</p>
+            <p>Arrival Time: {flightDetails.arrivalTime}</p>
+            <p>Total Price: ${flightDetails.price + 100}</p>
+          </>
+        )}
       </div>
     );
+  }
+
+  if (!flightDetails) {
+    return <div>Loading flight details...</div>; // Loading state while fetching flight details
   }
 
   return (
@@ -201,7 +224,6 @@ const BookingPayment = () => {
             </div>
           </div>
           <button type="submit" className="payment-btn" data-testid="confirm-payment-btn">Confirm Payment</button>
-
         </form>
       </div>
     </div>
@@ -209,5 +231,3 @@ const BookingPayment = () => {
 };
 
 export default BookingPayment;
-
-        

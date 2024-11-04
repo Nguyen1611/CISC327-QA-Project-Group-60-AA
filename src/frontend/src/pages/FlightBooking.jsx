@@ -1,127 +1,231 @@
-import { useState } from 'react';
-import '../styles/FlightBooking.css'; // Create this file for styling
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import '../styles/BookingPayment.css';
 
-const FlightBooking = () => {
-  const [tripType, setTripType] = useState('Round Trip');
-  const [searchFrom, setSearchFrom] = useState(''); // State for 'Flight from' search
-  const [searchTo, setSearchTo] = useState(''); // State for 'Where to?' search
-  const [fromDate, setFromDate] = useState(''); // State for 'From date'
-  const [toDate, setToDate] = useState(''); // State for 'To date'
+const BookingPayment = () => {
+  const [searchParams] = useSearchParams();
+  const flightId = searchParams.get('id'); // Get the flight ID from the URL
+  const [cardNumber, setCardNumber] = useState('');
+  const [expirationDate, setExpirationDate] = useState('');
+  const [cvv, setCvv] = useState('');
+  const [cardholderName, setCardholderName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
+  const [flightDetails, setFlightDetails] = useState(null); // State to hold flight details
 
-  // Flight data
-  const flights = [
-    { id: 1, fromLocation: 'Paris', toLocation: 'Toronto', price: 2296, img: 'paris-toronto.jpg', tripType: 'Round Trip', date: '2024-12-01' },
-    { id: 2, fromLocation: 'Toronto', toLocation: 'Vancouver', price: 279, img: 'toronto-vancouver.jpg', tripType: 'Round Trip', date: '2024-12-01' },
-    { id: 3, fromLocation: 'Vancouver', toLocation: 'Montreal', price: 382, img: 'vancouver-montreal.jpg', tripType: 'Round Trip', date: '2024-12-01' },
-    { id: 4, fromLocation: 'Toronto', toLocation: 'Montreal', price: 79, img: 'toronto-montreal.jpg', tripType: 'One Way', date: '2024-12-01' },
-    { id: 5, fromLocation: 'Toronto', toLocation: 'Vancouver', price: 149, img: 'toronto-vancouver.jpg', tripType: 'One Way', date: '2024-12-03' },
-    { id: 6, fromLocation: 'Paris', toLocation: 'Hanoi', price: 2296, img: 'paris-hanoi.jpg', tripType: 'Special Round Trip', date: '2024-12-01' },
-  ];
+  // Fetch flight details based on flight ID
+  useEffect(() => {
+    const fetchFlightDetails = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/get-flight/${flightId}`); // Update this endpoint as needed
+        if (!response.ok) {
+          throw new Error('Failed to fetch flight details');
+        }
+        const data = await response.json();
+        setFlightDetails(data.flight); // Assuming the response structure includes the flight object
+      } catch (error) {
+        console.error('Error fetching flight details:', error);
+      }
+    };
 
-  // Filter flights based on trip type and search criteria
-  const filteredFlights = flights.filter(flight => {
-    const regexFrom = new RegExp(searchFrom, 'i'); // Regular expression for 'Flight from'
-    const regexTo = new RegExp(searchTo, 'i'); // Regular expression for 'Where to?'
+    fetchFlightDetails();
+  }, [flightId]);
 
-    // Parse dates (parsedFromDate <= flightDate <= parsedToDate)
-    const flightDate = new Date(flight.date);
-    const parsedFromDate = new Date(fromDate);
-    const parsedToDate = new Date(toDate);
+  const validatePaymentInfo = () => {
+    if (cardNumber.length !== 16 || isNaN(cardNumber)) {
+      return 'Invalid card number. It should be 16 digits.';
+    }
+    if (!/^\d{2}\/\d{2}$/.test(expirationDate)) {
+      return 'Expiration date must be in MM/YY format.';
+    }
+    if (cvv.length !== 3 || isNaN(cvv)) {
+      return 'Invalid CVV. It should be 3 digits.';
+    }
+    if (cardholderName.trim() === '') {
+      return 'Cardholder name is required.';
+    }
+    if (email.trim() === '' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return 'Please enter a valid email address.';
+    }
+    if (phone.trim() === '' || isNaN(phone)) {
+      return 'Please enter a valid phone number.';
+    }
+    return ''; // No errors
+  };
 
+  const handlePayment = (e) => {
+    e.preventDefault();
+    const errorMsg = validatePaymentInfo();
+    if (errorMsg) {
+      setError(errorMsg);
+      setSuccess(false);
+    } else {
+      setError('');
+      setSuccess(true);
+      setConfirmed(true); // Simulate successful confirmation
+    }
+  };
+
+  if (confirmed) {
     return (
-      flight.tripType === tripType &&
-      regexFrom.test(flight.fromLocation) &&
-      regexTo.test(flight.toLocation) &&
-      (fromDate === '' || flightDate >= parsedFromDate) &&
-      (toDate === '' || flightDate <= parsedToDate)
+      <div className="booking-confirmation">
+        <h2>Booking Confirmation</h2>
+        <p>Your payment was successful!</p>
+        {flightDetails && (
+          <>
+            <p>Flight Route: {`${flightDetails.fromLocation} to ${flightDetails.toLocation}`}</p>
+            <p>Departure Date: {flightDetails.date}</p>
+            <p>Total Price: ${flightDetails.price + 100}</p>
+          </>
+        )}
+      </div>
     );
-  });
+  }
+
+  if (!flightDetails) {
+    return <div>Loading flight details...</div>; // Loading state while fetching flight details
+  }
 
   return (
-    <div className="flight-booking">
-      {/* Top Section */}
-      <div className="trip-selection">
-        <label>
-          <input type="radio" name="tripType" checked={tripType === 'One Way'} onChange={() => setTripType('One Way')} />
-          One Way
-        </label>
-        <label>
-          <input type="radio" name="tripType" checked={tripType === 'Round Trip'} onChange={() => setTripType('Round Trip')} />
-          Round Trip
-        </label>
-        <label>
-          <input type="radio" name="tripType" checked={tripType === 'Special Round Trip'} onChange={() => setTripType('Special Round Trip')} />
-          Special Round Trip
-        </label>
-      </div>
+    <div className="booking-payment">
+      <h2 className="title">Review & Secure Payment</h2>
 
-      {/* Search Section */}
-      <div className="search-section">
-        <div className="search-fields">
-          <input 
-            type="text" 
-            placeholder="Flight from?" 
-            value={searchFrom} 
-            onChange={(e) => setSearchFrom(e.target.value)} 
-          />
-          <input 
-            type="text" 
-            placeholder="Where to?" 
-            value={searchTo} 
-            onChange={(e) => setSearchTo(e.target.value)} 
-          />
-          <input 
-            name="depart"
-            placeholder="Depart"
-            type="date" 
-            value={fromDate} 
-            onChange={(e) => setFromDate(e.target.value)} 
-          />
-          <input
-            name="return"
-            placeholder="Return"
-            type="date" 
-            value={toDate} 
-            onChange={(e) => setToDate(e.target.value)} 
-          />
-          <select>
-            <option>1 Adult, Economy</option>
-            <option>2 Adults, Economy</option>
-            {/* Add more options as needed */}
-          </select>
-          <button>Search</button>
+      {/* Flight Route Information */}
+      <div className="fancy-flight-info">
+        <h3>Flight Information</h3>
+        <div className="flight-details">
+          <div className="flight-header">
+            <img src={`/images/${flightDetails.img}`} alt="Flight" className="flight-icon" />
+            <p className="flight-route">{`${flightDetails.fromLocation} to ${flightDetails.toLocation}`}</p>
+          </div>
+          <div className="flight-time">
+            <p><strong>Departure Date:</strong> {flightDetails.date}</p>
+          </div>
+          <div className="flight-status">
+            <p><span className="status-badge">Confirmed</span></p>
+          </div>
         </div>
       </div>
 
-      {/* Flight Cards */}
-      <div className="flight-cards">
-        {filteredFlights.map((flight) => (
-          <div key={flight.id} className="flight-card">
-            <img src={`images/${flight.img}`} alt={`${flight.fromLocation} → ${flight.toLocation}`} />
-            <div className="flight-info">
-              <h3>{flight.fromLocation} → {flight.toLocation}</h3>
-              <p>${flight.price}</p>
-              <p>{flight.tripType}</p>
-              <p>{flight.date}</p>
+      {/* Contact Information */}
+      <div className="contact-info">
+        <h3>Contact Information</h3>
+        <div className="form-grid">
+          <div className="form-field">
+            <label htmlFor="email">Email Address <span className="required">*</span></label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="Enter your email"
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="phone">Phone Number <span className="required">*</span></label>
+            <input
+              id="phone"
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+              placeholder="123-456-7890"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Price Summary */}
+      <div className="price-summary">
+        <h3>Price Summary</h3>
+        <div className="summary-line">
+          <span>Flight Price</span>
+          <span>${flightDetails.price}</span>
+        </div>
+        <div className="summary-line">
+          <span>Taxes & Fees</span>
+          <span>$100</span>
+        </div>
+        <div className="summary-line total">
+          <span>Total</span>
+          <span>${flightDetails.price + 100}</span>
+        </div>
+      </div>
+
+      {/* Payment Section */}
+      <div className="payment-section">
+        <h3>Payment Information</h3>
+        <div className="credit-card-display">
+          <div className="credit-card">
+            <div className="card-number">
+              {cardNumber ? cardNumber.replace(/(.{4})/g, '$1 ') : '•••• •••• •••• ••••'}
+            </div>
+            <div className="card-info">
+              <div className="card-name">{cardholderName || 'Cardholder Name'}</div>
+              <div className="card-expiry">{expirationDate || 'MM/YY'}</div>
             </div>
           </div>
-        ))}
-      </div>
-
-      {/* Footer Section */}
-      <div className="footer">
-        <button>Back</button>
-        <button>Next</button>
-        <div className="language-selector">
-          <select>
-            <option>English</option>
-            <option>French</option>
-            {/* Add more language options */}
-          </select>
         </div>
+
+        {error && <p className="error-message" role="alert">{error}</p>}
+        {success && <p className="success-message">Payment Successful!</p>}
+
+        <form onSubmit={handlePayment} className="payment-form">
+          <div className="form-grid">
+            <div className="form-field">
+              <label htmlFor="cardholderName">Cardholder Name <span className="required">*</span></label>
+              <input
+                id="cardholderName"
+                type="text"
+                value={cardholderName}
+                onChange={(e) => setCardholderName(e.target.value)}
+                required
+                placeholder="Enter Cardholder Name"
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="cardNumber">Card Number <span className="required">*</span></label>
+              <input
+                id="cardNumber"
+                type="text"
+                value={cardNumber}
+                onChange={(e) => setCardNumber(e.target.value)}
+                required
+                placeholder="•••• •••• •••• ••••"
+              />
+            </div>
+            <div className="form-field small-field">
+              <label htmlFor="expirationDate">Expiration Date <span className="required">*</span></label>
+              <input
+                id="expirationDate"
+                type="text"
+                value={expirationDate}
+                onChange={(e) => setExpirationDate(e.target.value)}
+                placeholder="MM/YY"
+                required
+              />
+            </div>
+            <div className="form-field small-field">
+              <label htmlFor="cvv">CVV <span className="required">*</span></label>
+              <input
+                id="cvv"
+                type="text"
+                value={cvv}
+                onChange={(e) => setCvv(e.target.value)}
+                placeholder="CVV"
+                required
+              />
+            </div>
+          </div>
+          <button type="submit" className="payment-btn" data-testid="confirm-payment-btn">Confirm Payment</button>
+        </form>
       </div>
     </div>
   );
 };
 
-export default FlightBooking;
+export default BookingPayment;
