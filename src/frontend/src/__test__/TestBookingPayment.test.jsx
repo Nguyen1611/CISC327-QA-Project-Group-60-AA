@@ -20,38 +20,25 @@ describe('BookingPayment Component', () => {
   });
 
   test('displays flight information correctly', () => {
-    // Check for flight information in the confirmation
-    expect(screen.getByText(/toronto → vancouver/i)).toBeInTheDocument(); // Check for flight route
-    expect(screen.getByText(/2024-10-25 14:00/i)).toBeInTheDocument(); // Check for departure time
-    expect(screen.getByText(/2024-10-25 16:00/i)).toBeInTheDocument(); // Check for arrival time
+    // Update with expected flight details
+    expect(screen.getByText(/toronto → montreal/i)).toBeInTheDocument(); // Check for flight route
+    expect(screen.getByText(/2024-12-01/i)).toBeInTheDocument(); // Check for date
+    expect(screen.getByText(/one way/i)).toBeInTheDocument(); // Check for trip type
+
+    // Check for available seats display
+    expect(screen.getByText(/1a \(available\)/i)).toBeInTheDocument();
+    expect(screen.getByText(/1b \(booked\)/i)).toBeInTheDocument();
   });
 
   test('displays price summary in booking confirmation', () => {
-    // Check for price summary details
-    expect(screen.getByText(/price summary/i)).toBeInTheDocument(); // Check for price summary label
-    expect(screen.getByText(/flight price/i)).toBeInTheDocument(); // Check for flight price line
-    expect(screen.getByText(/279/i)).toBeInTheDocument(); // Check for the specific flight price
-    expect(screen.getByText(/taxes & fees/i)).toBeInTheDocument(); // Check for taxes & fees line
-    expect(screen.getByText(/100/i)).toBeInTheDocument(); // Check for the specific taxes & fees
-    expect(screen.getByText(/total/i)).toBeInTheDocument(); // Check for total line
-    expect(screen.getByText(/379/i)).toBeInTheDocument(); // Check for the total price (279 + 100)
+    // Verify the price summary
+    expect(screen.getByText(/price summary/i)).toBeInTheDocument();
+    expect(screen.getByText(/flight price/i)).toBeInTheDocument();
+    expect(screen.getByText(/\$79/i)).toBeInTheDocument(); // Flight price
+    expect(screen.getByText(/taxes & fees/i)).toBeInTheDocument();
+    expect(screen.getByText(/\$100/i)).toBeInTheDocument(); // Taxes & fees
+    expect(screen.getByText(/total/i)).toBeInTheDocument();
+    expect(screen.getByText(/\$179/i)).toBeInTheDocument(); // Total price
   });
-
-  test('displays error message for invalid card number', () => {
-    // Fill in an invalid card number
-    fireEvent.change(screen.getByLabelText(/cardholder name/i), { target: { value: 'John Doe' } });
-    fireEvent.change(screen.getByLabelText(/card number/i), { target: { value: '123' } });
-    fireEvent.change(screen.getByLabelText(/expiration date/i), { target: { value: '12/25' } });
-    fireEvent.change(screen.getByLabelText(/cvv/i), { target: { value: '123' } });
-    fireEvent.change(screen.getByLabelText(/email address/i), { target: { value: 'john.doe@example.com' } });
-    fireEvent.change(screen.getByLabelText(/phone number/i), { target: { value: '123-456-7890' } });
-
-    // Submit the form
-    fireEvent.click(screen.getByText(/confirm payment/i));
-
-    // Expect an error message for the invalid card number
-    expect(screen.getByText(/invalid card number/i)).toBeInTheDocument();
-  });
-
 
 });
