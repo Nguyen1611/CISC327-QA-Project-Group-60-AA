@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import '../styles/BookingPayment.css';
 import PaymentSuccessfully from '../pages/PaymentSuccessfully.jsx';
 import PaymentFailed from '../pages/PaymentFailed.jsx';
@@ -14,7 +15,8 @@ const BookingPayment = () => {
   const [success, setSuccess] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
 
-  const flightDetails = {
+  const location = useLocation();
+  const flightDetails = location.state?.flightDetails || {
     route: 'Toronto → Vancouver',
     departureTime: '2024-10-25 14:00',
     arrivalTime: '2024-10-25 16:00',
