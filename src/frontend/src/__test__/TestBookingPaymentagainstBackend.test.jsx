@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom'; // Import MemoryRouter
 import BookingPayment from '../pages/BookingPayment';
 
 // Mock fetch globally
@@ -14,8 +15,13 @@ global.fetch = async () => {
 
 describe('BookingPayment Component', () => {
   beforeEach(() => {
-    render(<BookingPayment />);
+    render(
+      <MemoryRouter>
+        <BookingPayment />
+      </MemoryRouter>
+    ); // Wrap BookingPayment in MemoryRouter
   });
+
 
   test('renders the component correctly', () => {
     expect(screen.getByText(/review & secure payment/i)).toBeTruthy();
