@@ -17,11 +17,6 @@ export default function Navbar() {
               Flights
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/booking" className={({ isActive }) => (isActive ? "active" : "")}>
-              My Booking
-            </NavLink>
-          </li>
         </ul>
 
         {/* Auth Buttons */}
