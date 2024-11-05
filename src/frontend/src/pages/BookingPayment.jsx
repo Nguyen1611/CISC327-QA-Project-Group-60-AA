@@ -4,6 +4,7 @@ import '../styles/BookingPayment.css';
 import PaymentSuccessfully from '../pages/PaymentSuccessfully.jsx';
 import PaymentFailed from '../pages/PaymentFailed.jsx';
 
+
 const BookingPayment = () => {
   const [cardNumber, setCardNumber] = useState('');
   const [expirationDate, setExpirationDate] = useState('');
@@ -17,7 +18,7 @@ const BookingPayment = () => {
   const [prevFlightDetails, setFlightDetails] = useState(null); // State to hold flight details
 
   const [searchParams] = useSearchParams(); // Use search params to get the flight ID
-  const flightId = searchParams.get('id'); // Get the flight ID from the URL
+  const flightId = searchParams.get('id'); // Get the flight ID from the UR
 
   // Fetch flight details based on flight ID
   useEffect(() => {
@@ -124,11 +125,15 @@ const BookingPayment = () => {
           <div className="available-seats">
             <p><strong>Available Seats:</strong></p>
             <ul>
-              {flightDetails.availableSeats.map((seat) => (
-                <li key={seat.seat} className={seat.available ? 'available' : 'unavailable'}>
-                  {seat.seat} {seat.available ? '(Available)' : '(Booked)'}
-                </li>
-              ))}
+              {Array.isArray(flightDetails.availableSeats) ? (
+                flightDetails.availableSeats.map((seat) => (
+                  <li key={seat.seat} className={seat.available ? 'available' : 'unavailable'}>
+                    {seat.seat} {seat.available ? '(Available)' : '(Booked)'}
+                  </li>
+                ))
+              ) : (
+                <p>No seats available.</p>
+              )}
             </ul>
           </div>
           <div className="flight-status">

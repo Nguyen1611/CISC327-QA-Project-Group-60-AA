@@ -18,7 +18,6 @@ function App() {
         <div style={{ height: '100%' }}>
           {/* Navbar always visible */}
           <Navbar />
-
           <Routes>
             <Route path="/" element={<FlightBooking />} />
             <Route path="/booking" element={<BookingPayment />} />
@@ -30,6 +29,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
+        
       </Router>
     </AuthProvider>
   );
