@@ -4,6 +4,8 @@ import '../styles/BookingPayment.css';
 import PaymentSuccessfully from '../pages/PaymentSuccessfully.jsx';
 import PaymentFailed from '../pages/PaymentFailed.jsx';
 
+import { useLocation } from 'react-router-dom';
+
 const BookingPayment = () => {
   const [cardNumber, setCardNumber] = useState('');
   const [expirationDate, setExpirationDate] = useState('');
@@ -16,14 +18,14 @@ const BookingPayment = () => {
   const [confirmed, setConfirmed] = useState(false);
   const [prevFlightDetails, setFlightDetails] = useState(null); // State to hold flight details
 
-  const [searchParams] = useSearchParams(); // Use search params to get the flight ID
-  const flightId = searchParams.get('id'); // Get the flight ID from the URL
+  const location = useLocation();
+  const flightId = location.state?.flightId; // Assuming flightId is passed in the location state
 
   // Fetch flight details based on flight ID
   useEffect(() => {
     const fetchFlightDetails = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:5000/get-flight/${flightId}`); // Update this endpoint as needed
+        const response = await fetch('http://127.0.0.1:5000/get-flight/${flightId}'); // Update this endpoint as needed
         if (!response.ok) {
           throw new Error('Failed to fetch flight details');
         }
