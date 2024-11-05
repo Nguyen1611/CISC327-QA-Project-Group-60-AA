@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../styles/BookingPayment.css';
 import PaymentSuccessfully from '../pages/PaymentSuccessfully.jsx';
@@ -14,10 +14,30 @@ const BookingPayment = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [prevFlightDetails, setFlightDetails] = useState(null); // State to hold flight details
 
   const location = useLocation();
+  const flightId = location.state?.flightId;
 
-  const flightDetails = location.state?.flightDetails || {
+  // Fetch flight details based on flight ID
+  useEffect(() => {
+    const fetchFlightDetails = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/get-flight/${flightId}`); // Update this endpoint as needed
+        if (!response.ok) {
+          throw new Error('Failed to fetch flight details');
+        }
+        const data = await response.json();
+        setFlightDetails(data.flight); // Assuming the response structure includes the flight object
+      } catch (error) {
+        console.error('Error fetching flight details:', error);
+      }
+    };
+
+    fetchFlightDetails();
+  }, [flightId]);
+
+  const defaultFlightDetails =  {
     _id: '6726f4075edf20eb09d8f39a',
     fromLocation: 'Toronto',
     toLocation: 'Montreal',
@@ -30,6 +50,8 @@ const BookingPayment = () => {
       { seat: '1B', available: false }
     ]
   };
+
+  const flightDetails = prevFlightDetails || defaultFlightDetails;
 
   const validatePaymentInfo = () => {
     if (cardNumber.length !== 16 || isNaN(cardNumber)) {
