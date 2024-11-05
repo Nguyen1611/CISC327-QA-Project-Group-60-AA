@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import '../styles/BookingPayment.css';
 import PaymentSuccessfully from '../pages/PaymentSuccessfully.jsx';
 import PaymentFailed from '../pages/PaymentFailed.jsx';
@@ -16,8 +16,8 @@ const BookingPayment = () => {
   const [confirmed, setConfirmed] = useState(false);
   const [prevFlightDetails, setFlightDetails] = useState(null); // State to hold flight details
 
-  const location = useLocation();
-  const flightId = location.state?.flightId;
+  const [searchParams] = useSearchParams(); // Use search params to get the flight ID
+  const flightId = searchParams.get('id'); // Get the flight ID from the URL
 
   // Fetch flight details based on flight ID
   useEffect(() => {
