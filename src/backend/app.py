@@ -1,9 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from bson.objectid import ObjectId  # Import ObjectId for MongoDB
+from auth import auth_bp  # Import the Blueprint
+from payment import is_valid_payment, check_flight_availability, confirm_booking,  get_booking_history
 
 load_dotenv()
 
@@ -11,13 +13,13 @@ load_dotenv()
 client_uri = os.getenv('FLIGHTDATABASE_URI')
 client = MongoClient(client_uri)
 
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS for cross-origin requests
 
-# Mock user database
-users = {
-    "test@example.com": "password123"  # Sign in to test dynamic navbar
-}
+
+# Register the auth Blueprint that handle signin and register
+app.register_blueprint(auth_bp, url_prefix='/auth')
 
 @app.route('/get-flights', methods=['GET'])
 def get_flights():
@@ -55,17 +57,8 @@ def get_flight(flight_id):
         return jsonify({'error': 'Flight not found'}), 404
 
 
-@app.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
 
-    # Check if the user exists and password matches
-    if email in users and users[email] == password:
-        return jsonify({"message": "Login successful!", "status": "success"}), 200
-    else:
-        return jsonify({"message": "Invalid credentials", "status": "fail"}), 401
 
 if __name__ == '__main__':
     app.run(debug=True)
+

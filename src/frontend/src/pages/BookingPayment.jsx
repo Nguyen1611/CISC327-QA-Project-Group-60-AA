@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import '../styles/BookingPayment.css';
+import PaymentSuccessfully from '../pages/PaymentSuccessfully.jsx';
+import PaymentFailed from '../pages/PaymentFailed.jsx';
 
 const BookingPayment = () => {
   const [searchParams] = useSearchParams();
@@ -14,8 +16,12 @@ const BookingPayment = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
-  const [flightDetails, setFlightDetails] = useState(null); // State to hold flight details
 
+  const [flightDetails, setFlightDetails] = useState(null); // State to hold flight details
+  const [prevFlightDetails, setFlightDetails] = useState(null); // State to hold flight details
+
+  const [searchParams] = useSearchParams(); // Use search params to get the flight ID
+  const flightId = searchParams.get('id'); // Get the flight ID from the URL
   // Fetch flight details based on flight ID
   useEffect(() => {
     const fetchFlightDetails = async () => {
@@ -33,6 +39,9 @@ const BookingPayment = () => {
 
     fetchFlightDetails();
   }, [flightId]);
+
+
+  const flightDetails = prevFlightDetails;
 
   const validatePaymentInfo = () => {
     if (cardNumber.length !== 16 || isNaN(cardNumber)) {
@@ -71,6 +80,7 @@ const BookingPayment = () => {
 
   if (confirmed) {
     return (
+
       <div className="booking-confirmation">
         <h2>Booking Confirmation</h2>
         <p>Your payment was successful!</p>
@@ -83,6 +93,7 @@ const BookingPayment = () => {
           </>
         )}
       </div>
+
     );
   }
 
@@ -99,12 +110,22 @@ const BookingPayment = () => {
         <h3>Flight Information</h3>
         <div className="flight-details">
           <div className="flight-header">
-            <img src="/icons/plane-icon.png" alt="" className="flight-icon" />
-            <p className="flight-route">{flightDetails.route}</p>
+            <img src={`/images/${flightDetails.img}`} alt="Flight" className="flight-icon" />
+            <p className="flight-route">{`${flightDetails.fromLocation} → ${flightDetails.toLocation}`}</p>
           </div>
           <div className="flight-time">
-            <p><strong>Departure:</strong> {flightDetails.departureTime}</p>
-            <p><strong>Arrival:</strong> {flightDetails.arrivalTime}</p>
+            <p><strong>Date:</strong> {flightDetails.date}</p>
+            <p><strong>Trip Type:</strong> {flightDetails.tripType}</p>
+          </div>
+          <div className="available-seats">
+            <p><strong>Available Seats:</strong></p>
+            <ul>
+              {flightDetails.availableSeats.map((seat) => (
+                <li key={seat.seat} className={seat.available ? 'available' : 'unavailable'}>
+                  {seat.seat} {seat.available ? '(Available)' : '(Booked)'}
+                </li>
+              ))}
+            </ul>
           </div>
           <div className="flight-status">
             <p><span className="status-badge">Confirmed</span></p>
@@ -231,3 +252,4 @@ const BookingPayment = () => {
 };
 
 export default BookingPayment;
+

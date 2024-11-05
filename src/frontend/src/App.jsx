@@ -7,6 +7,8 @@ import SignIn from "./pages/SignIn";
 import Register from "./pages/Register";
 import BookingPayment from "./pages/BookingPayment";
 import NotFound from "./pages/NotFound";
+import PaymentSuccessfully from "./pages/PaymentSuccessfully"
+import PaymentFailed from "./pages/PaymentFailed"
 import "./App.css";
 
 function App() {
@@ -20,6 +22,9 @@ function App() {
           <Routes>
             <Route path="/" element={<FlightBooking />} />
             <Route path="/booking" element={<BookingPayment />} />
+            <Route path="/landing" element={<FlightBooking />} />
+            <Route path="/paymentsuccessful" element={<PaymentSuccessfully />} />
+            <Route path="/paymentfailed" element={<PaymentFailed />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFound />} />
@@ -31,3 +36,4 @@ function App() {
 }
 
 export default App;
+

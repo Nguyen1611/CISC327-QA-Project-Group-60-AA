@@ -25,4 +25,5 @@ dist-ssr
 
 #addition
 venv/
-
+.env
+__pycache__

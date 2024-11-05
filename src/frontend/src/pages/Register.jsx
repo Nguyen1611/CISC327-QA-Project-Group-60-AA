@@ -24,16 +24,26 @@ const Register = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  // Validate email format
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   // Handle user registration
   const handleRegister = async () => {
+    
     if (formData.password !== formData.confirmPassword) {
       setMessage("Passwords do not match.");
       return;
     }
-
+    if (!isValidEmail(formData.email)) {
+      setMessage("Invalid email format.");
+      return;
+    }
     try {
       // Make POST request to register user
-      const response = await fetch("http://127.0.0.1:5000/register", {
+      const response = await fetch("http://127.0.0.1:5000/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,7 +69,7 @@ const Register = () => {
   return (
     <div className="auth-container">
       <div className="auth-form">
-        <h2>Sign Up</h2>
+        <h2>Register</h2>
         <input 
           type="email" 
           name="email" 
