@@ -1,29 +1,28 @@
-import { useState } from 'react';
-import '../styles/FlightBooking.css'; // Create this file for styling
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import '../styles/FlightBooking.css';
 
 const FlightBooking = () => {
   const [tripType, setTripType] = useState('Round Trip');
-  const [searchFrom, setSearchFrom] = useState(''); // State for 'Flight from' search
-  const [searchTo, setSearchTo] = useState(''); // State for 'Where to?' search
-  const [fromDate, setFromDate] = useState(''); // State for 'From date'
-  const [toDate, setToDate] = useState(''); // State for 'To date'
+  const [searchFrom, setSearchFrom] = useState('');
+  const [searchTo, setSearchTo] = useState('');
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [flights, setFlights] = useState([]); // State to hold flight data
+  const navigate = useNavigate(); // Initialize the navigate function
 
-  // Flight data
-  const flights = [
-    { id: 1, fromLocation: 'Paris', toLocation: 'Toronto', price: 2296, img: 'paris-toronto.jpg', tripType: 'Round Trip', date: '2024-12-01' },
-    { id: 2, fromLocation: 'Toronto', toLocation: 'Vancouver', price: 279, img: 'toronto-vancouver.jpg', tripType: 'Round Trip', date: '2024-12-01' },
-    { id: 3, fromLocation: 'Vancouver', toLocation: 'Montreal', price: 382, img: 'vancouver-montreal.jpg', tripType: 'Round Trip', date: '2024-12-01' },
-    { id: 4, fromLocation: 'Toronto', toLocation: 'Montreal', price: 79, img: 'toronto-montreal.jpg', tripType: 'One Way', date: '2024-12-01' },
-    { id: 5, fromLocation: 'Toronto', toLocation: 'Vancouver', price: 149, img: 'toronto-vancouver.jpg', tripType: 'One Way', date: '2024-12-03' },
-    { id: 6, fromLocation: 'Paris', toLocation: 'Hanoi', price: 2296, img: 'paris-hanoi.jpg', tripType: 'Special Round Trip', date: '2024-12-01' },
-  ];
+  // Fetch flight data from API on component mount
+  useEffect(() => {
+    fetch('http://127.0.0.1:5000/get-flights')
+      .then(response => response.json())
+      .then(data => setFlights(data['flights']))
+      .catch(error => console.error('Error fetching flights:', error));
+  }, []);
 
   // Filter flights based on trip type and search criteria
   const filteredFlights = flights.filter(flight => {
-    const regexFrom = new RegExp(searchFrom, 'i'); // Regular expression for 'Flight from'
-    const regexTo = new RegExp(searchTo, 'i'); // Regular expression for 'Where to?'
-
-    // Parse dates (parsedFromDate <= flightDate <= parsedToDate)
+    const regexFrom = new RegExp(searchFrom, 'i');
+    const regexTo = new RegExp(searchTo, 'i');
     const flightDate = new Date(flight.date);
     const parsedFromDate = new Date(fromDate);
     const parsedToDate = new Date(toDate);
@@ -36,6 +35,10 @@ const FlightBooking = () => {
       (toDate === '' || flightDate <= parsedToDate)
     );
   });
+
+  const handleBookClick = (flightId) => {
+    navigate(`/booking?id=${flightId}`);
+  };
 
   return (
     <div className="flight-booking">
@@ -87,7 +90,6 @@ const FlightBooking = () => {
           <select>
             <option>1 Adult, Economy</option>
             <option>2 Adults, Economy</option>
-            {/* Add more options as needed */}
           </select>
           <button>Search</button>
         </div>
@@ -96,13 +98,14 @@ const FlightBooking = () => {
       {/* Flight Cards */}
       <div className="flight-cards">
         {filteredFlights.map((flight) => (
-          <div key={flight.id} className="flight-card">
+          <div key={flight._id} className="flight-card"> {/* Use _id instead of id */}
             <img src={`images/${flight.img}`} alt={`${flight.fromLocation} → ${flight.toLocation}`} />
             <div className="flight-info">
               <h3>{flight.fromLocation} → {flight.toLocation}</h3>
               <p>${flight.price}</p>
               <p>{flight.tripType}</p>
               <p>{flight.date}</p>
+              <button onClick={() => handleBookClick(flight._id)}>Book</button> {/* Book button */}
             </div>
           </div>
         ))}
@@ -116,7 +119,6 @@ const FlightBooking = () => {
           <select>
             <option>English</option>
             <option>French</option>
-            {/* Add more language options */}
           </select>
         </div>
       </div>

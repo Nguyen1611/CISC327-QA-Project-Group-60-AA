@@ -5,6 +5,8 @@ import PaymentSuccessfully from '../pages/PaymentSuccessfully.jsx';
 import PaymentFailed from '../pages/PaymentFailed.jsx';
 
 const BookingPayment = () => {
+  const [searchParams] = useSearchParams();
+  const flightId = searchParams.get('id'); // Get the flight ID from the URL
   const [cardNumber, setCardNumber] = useState('');
   const [expirationDate, setExpirationDate] = useState('');
   const [cvv, setCvv] = useState('');
@@ -14,11 +16,12 @@ const BookingPayment = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+
+  const [flightDetails, setFlightDetails] = useState(null); // State to hold flight details
   const [prevFlightDetails, setFlightDetails] = useState(null); // State to hold flight details
 
   const [searchParams] = useSearchParams(); // Use search params to get the flight ID
   const flightId = searchParams.get('id'); // Get the flight ID from the URL
-
   // Fetch flight details based on flight ID
   useEffect(() => {
     const fetchFlightDetails = async () => {
@@ -37,21 +40,8 @@ const BookingPayment = () => {
     fetchFlightDetails();
   }, [flightId]);
 
-  const defaultFlightDetails =  {
-    _id: '6726f4075edf20eb09d8f39a',
-    fromLocation: 'Toronto',
-    toLocation: 'Montreal',
-    price: 79,
-    img: 'toronto-montreal.jpg',
-    tripType: 'One Way',
-    date: '2024-12-01',
-    availableSeats: [
-      { seat: '1A', available: true },
-      { seat: '1B', available: false }
-    ]
-  };
 
-  const flightDetails = prevFlightDetails || defaultFlightDetails;
+  const flightDetails = prevFlightDetails;
 
   const validatePaymentInfo = () => {
     if (cardNumber.length !== 16 || isNaN(cardNumber)) {
@@ -90,19 +80,25 @@ const BookingPayment = () => {
 
   if (confirmed) {
     return (
-      <PaymentSuccessfully
-        route={`${flightDetails.fromLocation} → ${flightDetails.toLocation}`}
-        departureTime={flightDetails.date}
-        arrivalTime={flightDetails.date} // Adjust based on duration if available
-        totalPrice={flightDetails.price + 100} // Add any additional fees if applicable
-      />
+
+      <div className="booking-confirmation">
+        <h2>Booking Confirmation</h2>
+        <p>Your payment was successful!</p>
+        {flightDetails && (
+          <>
+            <p>Flight Route: {flightDetails.route}</p>
+            <p>Departure Time: {flightDetails.departureTime}</p>
+            <p>Arrival Time: {flightDetails.arrivalTime}</p>
+            <p>Total Price: ${flightDetails.price + 100}</p>
+          </>
+        )}
+      </div>
+
     );
-  } else if (error) {
-    return (
-      <PaymentFailed
-        errorMessage={error} // Pass the error message to the PaymentFailed component
-      />
-    );
+  }
+
+  if (!flightDetails) {
+    return <div>Loading flight details...</div>; // Loading state while fetching flight details
   }
 
   return (
@@ -249,7 +245,6 @@ const BookingPayment = () => {
             </div>
           </div>
           <button type="submit" className="payment-btn" data-testid="confirm-payment-btn">Confirm Payment</button>
-
         </form>
       </div>
     </div>
@@ -258,5 +253,3 @@ const BookingPayment = () => {
 
 export default BookingPayment;
 
-
-        
