@@ -19,7 +19,7 @@ mongo_uri = os.getenv("DATABASE_URI")
 
 # Check if the URI was successfully retrieved
 if not mongo_uri:
-    raise ValueError("MONGODB_URI not found in environment variables.")
+    raise ValueError("DATABASE_URI not found in environment variables.")
 
 # Create a MongoDB client
 try:

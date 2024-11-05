@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
@@ -10,7 +10,7 @@ from payment import is_valid_payment, check_flight_availability, confirm_booking
 load_dotenv()
 
 # Get the MongoDB URI from the environment variable
-client_uri = os.getenv('FLIGHTDATABASE_URI')
+client_uri = os.getenv('DATABASE_URI')
 client = MongoClient(client_uri)
 
 
