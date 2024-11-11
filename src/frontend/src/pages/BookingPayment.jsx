@@ -76,18 +76,67 @@ const BookingPayment = () => {
     return ''; // No errors
   };
 
-  const handlePayment = (e) => {
+  const handlePayment = async (e) => {
     e.preventDefault();
     const errorMsg = validatePaymentInfo();
     if (errorMsg) {
       setError(errorMsg);
       setSuccess(false);
-    } else {
-      setError('');
-      setSuccess(true);
-      setConfirmed(true); // Simulate successful confirmation
+      return;
+    }
+  
+    setError(''); // Reset error message
+    setSuccess(false); // Reset success message
+    
+    // Prepare booking data
+    const bookingData = {
+      flight_id: flightDetails._id, // Add flight ID from state
+      user_email: email,
+      user_phone: phone,
+      flight_data: {
+        fromLocation: flightDetails.fromLocation,
+        toLocation: flightDetails.toLocation,
+        date: flightDetails.date,
+        price: flightDetails.price,
+        tripType: flightDetails.tripType,
+        availableSeats: flightDetails.availableSeats,
+      },
+      payment_details: {
+        cardNumber,
+        expirationDate,
+        cvv,
+        cardholderName,
+      },
+    };
+  
+    try {
+      // Send POST request to confirm booking
+      const response = await fetch('http://127.0.0.1:5000/confirmBooking', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookingData),
+      });
+      
+      
+      const result = await response.json();  // Parse the response body as JSON
+      
+      if (!response.ok || !result) {
+        setError(result?.message || 'Failed to confirm booking');  // Set the error message from the response
+        setSuccess(false);
+      } else {
+        setSuccess(true);
+        setConfirmed(true);
+      }
+    } catch (error) {
+      
+      // setError(error);  // Catch network or other errors and set the error message
+      // setSuccess(false);  // Reset success state
+      console.error('Error:', error);  // Log error for debugging
     }
   };
+  
 
   if (confirmed) {
     return (
