@@ -5,6 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import Navbar from '../component/Navbar';
 import '@testing-library/jest-dom';
 
+
 describe('Navbar Component', () => {
   // Helper function to render Navbar with Router and AuthContext
   const renderWithContext = (isAuthenticated, user, logout) => {

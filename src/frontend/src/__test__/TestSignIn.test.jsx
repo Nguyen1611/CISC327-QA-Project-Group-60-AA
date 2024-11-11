@@ -5,6 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import SignIn from '../pages/SignIn';
 import '@testing-library/jest-dom';
 
+
 describe('SignIn Component', () => {
   // Mock login function
   const mockLogin = vi.fn();

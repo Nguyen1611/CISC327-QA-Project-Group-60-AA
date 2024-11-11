@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom'; // Import MemoryRouter
 import BookingPayment from '../pages/BookingPayment';
+import '@testing-library/jest-dom';
 
 // Mock fetch globally
 global.fetch = async () => {
