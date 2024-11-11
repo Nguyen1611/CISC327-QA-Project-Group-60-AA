@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom'; // Import MemoryRouter
 import BookingPayment from '../pages/BookingPayment';
 import '@testing-library/jest-dom';
 
+
 describe('BookingPayment Component', () => {
   beforeEach(() => {
     render(

@@ -5,6 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import Register from '../pages/Register';
 import '@testing-library/jest-dom';
 
+
 // Mock login function
 const mockLogin = vi.fn();
 
