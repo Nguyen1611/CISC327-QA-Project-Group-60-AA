@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./component/Navbar";
 import FlightBooking from "./pages/FlightBooking";
@@ -14,12 +14,11 @@ import "./App.css";
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <div style={{ height: '100%' }}>
+      <BrowserRouter>
           {/* Navbar always visible */}
           <Navbar />
-          <Routes>
-            <Route path="/" element={<FlightBooking />} />
+        <Routes>
+        <Route path="/" element={<FlightBooking />} />
             <Route path="/booking" element={<BookingPayment />} />
             <Route path="/landing" element={<FlightBooking />} />
             <Route path="/paymentsuccessful" element={<PaymentSuccessfully />} />
@@ -27,10 +26,8 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
-        
-      </Router>
+        </Routes>
+      </BrowserRouter>
     </AuthProvider>
   );
 }

@@ -14,7 +14,7 @@ import os
 auth_bp = Blueprint('auth', __name__)
 
 # load from .env (make sure to create .env at src root)
-load_dotenv("../.env")
+load_dotenv("./.env")
 mongo_uri = os.getenv("DATABASE_URI")
 
 # Check if the URI was successfully retrieved

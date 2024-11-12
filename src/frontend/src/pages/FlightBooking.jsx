@@ -11,6 +11,70 @@ const FlightBooking = () => {
   const [flights, setFlights] = useState([]); // State to hold flight data
   const navigate = useNavigate(); // Initialize the navigate function
 
+  const flight = [
+    {
+      _id: '6726f2c45edf20eb09d8f397',
+      fromLocation: 'Paris',
+      toLocation: 'Toronto',
+      price: 2296,
+      img: 'paris-toronto.jpg',
+      tripType: 'Round Trip',
+      date: '2024-12-01',
+      'Available Seats': [
+        { seat: '1A', available: true },
+        { seat: '1B', available: false }
+      ]
+    },
+    {
+      _id: '6726f3585edf20eb09d8f398',
+      fromLocation: 'Toronto',
+      toLocation: 'Vancouver',
+      price: 279,
+      img: 'toronto-vancouver.jpg',
+      tripType: 'Round Trip',
+      date: '2024-12-01',
+      'Available Seats': [
+        { seat: '1A', available: true },
+        { seat: '1B', available: false }
+      ]
+    },
+    {
+      _id: '6726f38d5edf20eb09d8f399',
+      fromLocation: 'Vancouver',
+      toLocation: 'Montreal',
+      price: 382,
+      img: 'vancouver-montreal.jpg',
+      tripType: 'Round Trip',
+      date: '2024-12-01',
+      'Available Seats': [
+        { seat: '1A', available: true },
+        { seat: '1B', available: false }
+      ]
+    },
+    {
+      _id: '6726f4075edf20eb09d8f39a',
+      fromLocation: 'Toronto',
+      toLocation: 'Montreal',
+      price: 79,
+      img: 'toronto-montreal.jpg',
+      tripType: 'One Way',
+      date: '2024-12-01',
+      'Available Seats': [
+        { seat: '1A', available: true },
+        { seat: '1B', available: false }
+      ]
+    },
+    {
+      _id: '67339ac3acb4a2326e20ec41',
+      fromLocation: 'Toronto',
+      toLocation: 'Vancouver',
+      ' price': 149,
+      img: 'toronto-vancouver.jpg',
+      tripType: 'One Way',
+      date: '2024-12-03'
+    }
+  ];
+
   // Fetch flight data from API on component mount
   useEffect(() => {
     fetch('http://127.0.0.1:5000/get-flights')
@@ -39,6 +103,7 @@ const FlightBooking = () => {
   const handleBookClick = (flightId) => {
     navigate(`/booking?id=${flightId}`);
   };
+  
 
   return (
     <div className="flight-booking">
@@ -96,20 +161,19 @@ const FlightBooking = () => {
       </div>
 
       {/* Flight Cards */}
-      <div className="flight-cards">
-        {filteredFlights.map((flight) => (
-          <div key={flight._id} className="flight-card"> {/* Use _id instead of id */}
-            <img src={`images/${flight.img}`} alt={`${flight.fromLocation} → ${flight.toLocation}`} />
-            <div className="flight-info">
-              <h3>{flight.fromLocation} → {flight.toLocation}</h3>
-              <p>${flight.price}</p>
-              <p>{flight.tripType}</p>
-              <p>{flight.date}</p>
-              <button onClick={() => handleBookClick(flight._id)}>Book</button> {/* Book button */}
-            </div>
-          </div>
-        ))}
-      </div>
+      {filteredFlights.map((flight) => (
+  <div key={flight._id} className="flight-card"> {/* Use _id instead of id */}
+    <img src={`images/${flight.img}`} alt={`${flight.fromLocation} → ${flight.toLocation}`} />
+    <div className="flight-info">
+      <h3>{flight.fromLocation} → {flight.toLocation}</h3>
+      <p>${flight.price}</p>
+      <p>{flight.tripType}</p>
+      <p>{flight.date}</p>
+      <button onClick={() => handleBookClick(flight._id)}>Book</button> {/* Book button */}
+    </div>
+  </div>
+))}
+
 
       {/* Footer Section */}
       <div className="footer">
