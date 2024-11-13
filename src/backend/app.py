@@ -29,10 +29,14 @@ flights_db = client['FlightDatabase']
 flights_collection = flights_db['flights']
 
 def is_valid_payment(payment_details):
-    # Mock payment validation logic
     card_number = payment_details.get("cardNumber")
-    expiration_date = payment_details.get("expirationDate")
+    #expiration_date = payment_details.get("expirationDate")
     cvv = payment_details.get("cvv")
+
+    # Ensure that card_number and cvv are not None and meet length requirements
+    if not card_number or not cvv:
+        return False
+    
     return len(card_number) == 16 and len(cvv) == 3  # Simplified for example
 
 @app.before_request

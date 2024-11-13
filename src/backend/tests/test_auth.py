@@ -9,7 +9,7 @@ import auth
 from importlib import reload
 from pymongo.errors import ConnectionFailure
 
-# Load environment variables from .env.test for tests
+# Load environment variables from .env.test for tests make sure to in src/backend
 load_dotenv(dotenv_path='../.env')
 
 from app import app
