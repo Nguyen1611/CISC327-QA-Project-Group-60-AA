@@ -37,9 +37,9 @@ const Register = () => {
       setMessage("Passwords do not match.");
       return;
     }
-    if (!isValidEmail(formData.email)) {
-      setMessage("Invalid email format.");
-      return;
+      if (!isValidEmail(formData.email)) {
+        setMessage("Invalid email format.");
+        return;
     }
     try {
       // Make POST request to register user

@@ -89,4 +89,19 @@ describe('Register Component', () => {
       expect(screen.getByText('Email already exists.')).toBeInTheDocument();
     });
   });
+    // Test for invalid email format
+  test('displays error message for invalid email format', async () => {
+    // Enter an invalid email format and valid passwords
+    fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'invalidemail' } });
+    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(screen.getByPlaceholderText('Confirm Password'), { target: { value: 'password123' } });
+    
+    // Try to submit the form
+    fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
+
+    // Assert that the "Invalid email format." error message is displayed
+    await waitFor(() => {
+      expect(screen.getByText('Invalid email format.')).toBeInTheDocument();
+    });
+  });
 });
