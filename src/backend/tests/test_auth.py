@@ -1,5 +1,15 @@
+#tests/.
 import json
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env.test for tests
+load_dotenv(dotenv_path='../.env')
+
 from app import app
+
+
+
 
 def test_login():
     client = app.test_client()

@@ -27,3 +27,7 @@ dist-ssr
 venv/
 .env
 __pycache__
+.pytest_cache
+.flask
+coverage/
+.env.test
