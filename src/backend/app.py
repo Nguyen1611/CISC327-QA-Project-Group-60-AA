@@ -26,8 +26,8 @@ app.register_blueprint(auth_bp, url_prefix='/auth')
 client_uri = os.getenv('DATABASE_URI')
 # Initialize MongoDB client
 client = MongoClient(client_uri)
-client_db = client['user_database']  # Adjusted to your user database name
-users_collection = client_db['users']
+users_db = client['user_database']  # Adjusted to your user database name
+users_collection = users_db['users']
 flights_db = client['FlightDatabase']
 flights_collection = flights_db['flights']
 
@@ -94,46 +94,69 @@ def check_flight_availability():
 @app.route("/confirmBooking", methods=["GET", "POST"])
 def confirm_booking():
     if request.method == "GET":
-        # Handle GET logic (e.g., show confirmation message, return booking status, etc.)
         return jsonify({"message": "This is a placeholder for the confirmBooking endpoint."}), 200
+
     try:
         data = request.json
-        print("Received data:", data)
-
         user_email = data.get("user_email")
         flight_data = data.get("flight_data")
         payment_details = data.get("payment_details")
         flight_id = data.get("flight_id")
-    
 
-        # Basic validation for required fields
-        if not all([user_email, flight_data, payment_details]):
-            return jsonify({"message": "Missing required information."}), 400
-        
-        print(flight_id)
-        # Verify the flight still exists (additional check for confirmation step)
-        flight = flights_collection.find_one({
-            "_id": ObjectId(flight_id),
-        })
+        # Basic validation
+        if not user_email:
+            return jsonify({"message": "User email is missing."}), 400
+        if not flight_data:
+            return jsonify({"message": "Flight data is missing."}), 400
+        if not payment_details:
+            return jsonify({"message": "Payment details are missing."}), 400
+        if not flight_id:
+            return jsonify({"message": "Flight ID is missing."}), 400
+
+        # Validate flight ID
+        try:
+            flight_id = ObjectId(flight_id)
+        except InvalidId:
+            return jsonify({"message": "Invalid Flight ID."}), 400
+
+        # Find the flight
+        flight = flights_collection.find_one({"_id": flight_id})
         if not flight:
             return jsonify({"message": "Flight not found."}), 404
 
-        # Check if there's still an available seat
+        # Check for available seats
         available_seat = next((seat for seat in flight["Available Seats"] if seat["available"]), None)
         if not available_seat:
             return jsonify({"message": "No available seats on this flight."}), 400
 
-        # Process payment validation
+        # Validate payment
         if not is_valid_payment(payment_details):
             return jsonify({"message": "Invalid payment."}), 400
 
         # Generate booking code
         booking_code = f"{flight_data['fromLocation'][:2].upper()}{flight_data['toLocation'][:2].upper()}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
 
-        # # Add the booking code to user's booking history
-        # users_collection.insert_one(
-        #     {"Email": user_email},{"$addToSet": {"BookingHistory": booking_code}}
-        # )
+        # Update the flight document
+        flights_collection.update_one(
+            {"_id": flight_id, "Available Seats": {"$elemMatch": available_seat}},
+            {"$set": {"Available Seats.$.available": False}}
+        )
+
+        # Remove the flight if no seats remain
+        flight["Available Seats"].remove(available_seat)
+        if not any(seat["available"] for seat in flight["Available Seats"]):
+            flights_collection.delete_one({"_id": flight_id})
+        else:
+            flights_collection.update_one(
+                {"_id": flight_id},
+                {"$set": {"Available Seats": flight["Available Seats"]}}
+            )
+
+        # Add booking to user's history
+        users_collection.update_one(
+            {"Email": user_email},
+            {"$addToSet": {"BookingHistory": booking_code}}
+        )
 
         return jsonify({
             "message": "Booking confirmed successfully!",
@@ -148,8 +171,9 @@ def confirm_booking():
         }), 200
 
     except Exception as e:
-        print("Error processing booking:", str(e))  # Log the error
-        return jsonify({"message": str(e)}), 500
+        print("Error processing booking:", str(e))
+        return jsonify({"message": "An error occurred during booking."}), 500
+
 
 
 
@@ -168,9 +192,11 @@ def get_booking_history():
 
 @app.route('/get-flights', methods=['GET'])
 def get_flights():
-    flights_db = client['FlightDatabase']
-    collection = flights_db['flights']
-    flights = collection.find({}).limit(10)
+    # flights_db = client['FlightDatabase']
+    # collection = flights_db['flights']
+    # flights = collection.find({}).limit(10)
+
+    flights = flights_collection.find({}).limit(10)
 
     # Convert documents to JSON-serializable format
     flights_list = []
@@ -200,27 +226,6 @@ def get_flight(flight_id):
         return jsonify({"flight": flight}), 200
     else:
         return jsonify({'error': 'Flight not found'}), 404
-
-# Create a MongoDB client
-
-# Check if the server is available
-client.admin.command('ismaster')
-print("MongoDB connection successful.")
-
-# Access database
-if client:
-    db = client['user_database']
-    users_collection = db['users']
-else:
-    db = None
-    users_collection = None
-
-
-# Initialize MongoDB client
-client = MongoClient(client_uri or "mongodb://localhost:27017/")
-db = client.user_database  # Adjusted to your user database name
-users_collection = db.users
-flights_collection = db.flights
 
 
 if __name__ == '__main__':
