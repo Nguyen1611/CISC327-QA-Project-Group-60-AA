@@ -24,7 +24,7 @@ class AuthIntegrationTests(unittest.TestCase):
         import os
 
         # Load environment variables
-        load_dotenv("../.env")
+        load_dotenv('../.env')
         client = MongoClient(os.getenv("DATABASE_URI"))
         db = client['user_database']
         users_collection = db['users']
