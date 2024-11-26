@@ -50,3 +50,51 @@ def test_get_booking_history(mock_find_one, client):
     assert response.status_code == 200
     response_json = json.loads(response.data)
     assert response_json['bookingHistory'] == []
+
+
+
+@pytest.fixture
+def mock_data():
+    # Return mock user email and flight ID
+    return ('test@example.com', ObjectId('6746124a079ee73b6afb6feb'))
+
+
+def test_confirm_booking_and_get_history(mock_data):
+    user_email, flight_id = mock_data
+    client = app.test_client()
+
+    # Step 1: Insert mock flight data into the test database
+    flight_data = {
+        "_id": flight_id,
+        "fromLocation": "NYC",
+        "toLocation": "LAX",
+        "price": 300,
+        "date": "2024-12-01",
+        "Available Seats": [{"seat_number": "12A", "available": True}]
+    }
+    # Insert mock flight data directly into the test database (assuming test DB setup)
+    app.db.flights_collection.insert_one(flight_data)  # Adjust to your DB setup
+
+    # Step 2: Confirm a booking
+    booking_data = {
+        "user_email": user_email,
+        "flight_id": str(flight_id),
+        "flight_data": {
+            "fromLocation": "NYC",
+            "toLocation": "LAX"
+        },
+        "payment_details": {
+            "cardNumber": "1234567812345678",
+            "cvv": "123"
+        }
+    }
+
+    # Confirm the booking
+    response_confirm = client.post("/confirmBooking", json=booking_data)
+
+    # Step 3: Get booking history
+    response_history = client.get(f"/getBookingHistory?email={user_email}")
+
+    # Ensure the booking is in the history
+    booking_history = response_history.json.get("bookingHistory", [])
+    
