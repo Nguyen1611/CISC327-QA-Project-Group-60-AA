@@ -3,11 +3,13 @@ import sys
 import os
 from dotenv import load_dotenv
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
-from app import app 
+from app import app
 from pymongo import MongoClient
+import mongomock
 from mongomock import MongoClient as MockMongoClient
 import pytest
 from unittest.mock import patch
+from bson.objectid import ObjectId
 
 # Integration test for the /getBookingHistory endpoint
 @pytest.fixture
@@ -63,19 +65,7 @@ def test_confirm_booking_and_get_history(mock_data):
     user_email, flight_id = mock_data
     client = app.test_client()
 
-    # Step 1: Insert mock flight data into the test database
-    flight_data = {
-        "_id": flight_id,
-        "fromLocation": "NYC",
-        "toLocation": "LAX",
-        "price": 300,
-        "date": "2024-12-01",
-        "Available Seats": [{"seat_number": "12A", "available": True}]
-    }
-    # Insert mock flight data directly into the test database (assuming test DB setup)
-    app.db.flights_collection.insert_one(flight_data)  # Adjust to your DB setup
-
-    # Step 2: Confirm a booking
+    # Step 1: Confirm a booking
     booking_data = {
         "user_email": user_email,
         "flight_id": str(flight_id),
@@ -91,10 +81,11 @@ def test_confirm_booking_and_get_history(mock_data):
 
     # Confirm the booking
     response_confirm = client.post("/confirmBooking", json=booking_data)
+    
 
-    # Step 3: Get booking history
+    # Step 2: Get booking history
     response_history = client.get(f"/getBookingHistory?email={user_email}")
+    
 
     # Ensure the booking is in the history
     booking_history = response_history.json.get("bookingHistory", [])
-    
