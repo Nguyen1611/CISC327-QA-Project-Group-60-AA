@@ -10,7 +10,7 @@ import bcrypt
 import os
 
 # load from .env (make sure to create .env at src root)
-load_dotenv("../.env")
+load_dotenv()
 mongo_uri = os.getenv("DATABASE_URI")
 
 # Check if the URI was successfully retrieved
