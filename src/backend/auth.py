@@ -94,6 +94,19 @@ def register():
     users_collection.insert_one(new_user)
     return jsonify({"message": "User registered successfully.", "status": "success"}), 201
 
+@auth_bp.route('/delete', methods=['DELETE'])
+def delete_user():
+    data = request.json
+    email = data.get('email')
+
+    if not email:
+        return jsonify({"message": "Email is required."}), 400
+
+    result = users_collection.delete_one({"Email": email})
+    if result.deleted_count == 1:
+        return jsonify({"message": "User deleted successfully."}), 200
+    else:
+        return jsonify({"message": "User not found."}), 404
 
 # """
 # THIS IS ONLY FOR DEVELOPMENT PROCESS
